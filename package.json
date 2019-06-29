@@ -1,0 +1,35 @@
+{
+  "name": "AutoMart_UI",
+  "version": "1.0.0",
+  "description": "Challenge 4 of my ADC project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chuksjoe/AutoMart_UI.git"
+  },
+  "keywords": [
+    "automart",
+    "auto",
+    "mart",
+    "cars",
+    "sales",
+    "purchase",
+    "online",
+    "marketplace",
+    "automobiles"
+  ],
+  "author": "Chukwunonso Orjiakor",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chuksjoe/AutoMart_UI/issues"
+  },
+  "homepage": "https://github.com/chuksjoe/AutoMart_UI#readme",
+  "dependencies": {
+    "eslint": "^6.0.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.18.0"
+  }
+}
