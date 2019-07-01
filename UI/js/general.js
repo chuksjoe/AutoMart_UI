@@ -25,7 +25,7 @@ const formatKilometer = (value) => {
   let val = value;
   val = val.replace(/\D/g, '');
   val = val ? parseInt(val, 10) : 0;
-  return val === 0 ? '' : `(Km) ${val.toLocaleString('en-US')}`;
+  return val === 0 ? '' : `(mpg) ${val.toLocaleString('en-US')}`;
 };
 
 /* ============ MAIN LOGICS ========================= */
