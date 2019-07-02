@@ -146,14 +146,14 @@
 			<div class="modal-view sm-m-v">
 				<h2 class="modal-header">Mark AD as Fradulent</h2>
 				<div class="modal-body">
-					<h3 id="c-details" class="c-details-mv">New Volkswagen Cx3 - 2001</h3>
-					<p id="body-type" class="c-b-type">(Large Van)</p>
-					<p id="car-price" class="c-price">Price: &#8358 13,000,000</p>
-					<form>
+					<h3 id="c-details" class="c-details-mv"></h3>
+					<p id="body-type" class="c-b-type"></p>
+					<p id="car-price" class="c-price"></p>
+					<form class="flagging-form">
 						<div class = "input-field single">
 							<label for="">Reason:</label><br>
-							<select name="flag-reason">
-								<option value="">--</option>
+							<select class="reason" name="reason">
+								<option value=""></option>
 								<option value="pricing">Pricing</option>
 								<option value="weird-demands">Weird Demands</option>
 								<option value="stolen">Stolen</option>
@@ -162,10 +162,10 @@
 						</div>
 						<div class = "input-field single">
 							<label for="">Description:</label><br>
-							<textarea id="flag-desc" name="flag-desc" maxlength="200" placeholder="Description:"></textarea>
+							<textarea class="description" name="description" maxlength="200" placeholder="Description:"></textarea>
 						</div>
 						<div class="btn-group flex-container">
-							<button class="half-btn btn">Flag/Report AD</button>
+							<button id="flag-ad" class="half-btn btn">Flag/Report AD</button>
 							<button id="close-fraud-modal" class="half-btn btn">Cancel</button>
 						</div>
 					</form>
