@@ -73,11 +73,11 @@ signinBtn.onclick = (e) => {
 
 				if (res.data.is_admin) {
 					setTimeout(() => {
-						window.location.href = `${urlPrefix}/api/v1/admin.html`;
+						window.location.href = './admin.html';
 					}, 1000);
 				} else {
 					setTimeout(() => {
-						window.location.href = `${urlPrefix}/api/v1/marketplace.html`;
+						window.location.href = './marketplace.html';
 					}, 1000);
 				}
 			}

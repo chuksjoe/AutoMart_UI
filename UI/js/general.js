@@ -28,6 +28,18 @@ const formatKilometer = (value) => {
   return val === 0 ? '' : `(mpg) ${val.toLocaleString('en-US')}`;
 };
 
+const appendLeadZero = val => (Number(val) > 10 ? val : `0${val}`);
+
+const configDate = (dateStr) => {
+  const date = new Date(dateStr);
+  const days = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat'];
+  const months = ['Jan', 'Feb', 'Mar', 'April', 'May',
+  'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+  const time = date.toLocaleString([], { hour: 'numeric', minute: '2-digit', second: '2-digit' });
+  return `${days[date.getDay()]},
+   ${appendLeadZero(date.getDate())} ${months[date.getMonth()]} ${date.getFullYear()}, ${time}`;
+};
+
 /* ============ MAIN LOGICS ========================= */
 // Toggle Menubar filter bar when the screen is below 800px
 const menuList = document.querySelector('.menu-list');
