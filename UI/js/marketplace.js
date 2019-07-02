@@ -171,8 +171,8 @@ const getCarDetils = (carId) => {
         <p class="prop"><b>Fuel Capacity:</b><br>${fuel_cap}L</p>
         <p class="prop"><b>Mileage:</b><br>${mileage.toLocaleString('en-US')}km</p>
         <p class="prop"><b>Transmission:</b><br>${transmission_type}</p>
-        <p class="prop"><b>Posted By:</b><br>${(owner_id === parseInt(user_id, 10) ? 'Me' : owner_name)}</p>
         <p class="prop"><b>Doors:</b><br>${doors} doors</p>
+        <p class="prop"><b>Posted By:</b><br>${(owner_id === parseInt(user_id, 10) ? 'Me' : owner_name)}</p>
       </div>`;
       otherInfo.innerHTML = `
       <div class="description">
