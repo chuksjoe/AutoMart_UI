@@ -79,6 +79,6 @@ const logout = document.querySelector('.logout');
 if (logout !== null) {
   logout.onclick = () => {
     sessionStorage.clear();
-    document.location.href = '/api/v1/index';
+    document.location.href = './marketplace.html';
   };
 }
