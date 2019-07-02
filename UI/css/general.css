@@ -321,6 +321,11 @@ button[disabled]:hover {
 }
 
 /*General cars listing view*/
+#loading {
+  width: 100%;
+  margin: 50px 0;
+  text-align: center;
+}
 .car-list {
   list-style: none;
   padding: 0;
@@ -448,9 +453,12 @@ h3.c-details-mv {
 }
 .added-date {
   position: absolute;
-  top: 10px;
-  left: 10px;
-  color: #fff;
+  top: 60px;
+  left: 20px;
+  color: #000;
+  background-color: #fff;
+  box-shadow: 0 0 3px #eee;
+  padding: 5px 10px;
 }
 .prop-list {
   justify-content: normal;
@@ -459,6 +467,21 @@ h3.c-details-mv {
   width: 33.3%;
   margin: 10px 0 0;
   line-height: 1.4;
+}
+.other-info {
+  width: 100%;
+  background-color: #eee;
+  padding: 0 10px 10px;
+  margin-top: 15px;
+  overflow: auto;
+}
+.features label {
+  padding: 8px 12px;
+  display: inline-block;
+  margin: 5px 10px;
+  color: #fff;
+  background-color: #111;
+  border-radius: 25px;
 }
 
 /*for notification modal*/
@@ -501,14 +524,6 @@ h3.c-details-mv {
   .car-view-image,
   .car-view-main-desc {
     width: 100%;
-  }
-  .added-date {
-    position: absolute;
-    top: 60px;
-    left: 20px;
-    color: #000;
-    background-color: #fff;
-    padding: 5px 10px;
   }
 }
 

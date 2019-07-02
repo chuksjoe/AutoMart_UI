@@ -1,6 +1,7 @@
 .visitor-nav,
 .member-nav {
 	display: none;
+	height: 40px;
 }
 .car-card {
   width: 32%;
