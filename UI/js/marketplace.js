@@ -9,6 +9,7 @@ const closeCarPreview = document.getElementById('close-car-preview');
 const closePurModal = document.getElementById('close-purchase-modal');
 const closeFraudModal = document.getElementById('close-fraud-modal');
 const closeNotifation = document.querySelector('.close-notification');
+const message = document.querySelector('#notification-overlay .message');
 
 const userName = document.querySelector('.user-name');
 const user_id = sessionStorage.getItem('user_id');
@@ -56,7 +57,6 @@ const openPurchaseModal = (params) => {
 
   placeOrderBtn.onclick = (e) => {
     e.preventDefault();
-    const message = document.querySelector('#notification-overlay .message');
     let price_offered = document.querySelector('.purchase-order-form .price').value;
     price_offered = price_offered.replace(/\D/g, '');
     if (price_offered === '') {
@@ -70,7 +70,6 @@ const openPurchaseModal = (params) => {
       method: 'POST',
       body: JSON.stringify(data),
       headers: { 'Content-Type': 'application/json', authorization: `Bearer ${token}` },
-      mode: 'cors',
     };
     fetch(`${urlPrefix}/api/v1/order`, init)
     .then(res => res.json())
@@ -80,11 +79,8 @@ const openPurchaseModal = (params) => {
         message.innerHTML = `You have successfully placed an order for <b>${res.data.car_name}</b>.<br/><br/>
         Actual Price: &#8358 ${parseInt(res.data.price, 10).toLocaleString('en-US')}<br/>
         Price Offered: &#8358 ${parseInt(res.data.price_offered, 10).toLocaleString('en-US')}`;
-      } else if (res.status === 400) {
-        message.innerHTML = res.error;
       } else {
-        message.innerHTML = `Please ensure you are logged-in before placing an order.<br/>
-        If you don't have an account on AutoMart,<br/><a href='/api/v1/signup'>Click here to Sign-up.</a>`;
+        message.innerHTML = res.error;
       }
       purchaseModal.style.display = 'none';
       notificationModal.style.display = 'block';
@@ -94,7 +90,50 @@ const openPurchaseModal = (params) => {
 };
 
 const openFraudModal = (params) => {
+  const {
+    id, name, price, body_type,
+  } = params;
+  const flagAdBtn = document.getElementById('flag-ad');
+
+  document.querySelector('#fraudulent-flag-overlay .c-details-mv').innerHTML = name;
+  document.querySelector('#fraudulent-flag-overlay .c-b-type').innerHTML = `(${body_type})`;
+  document.querySelector('#fraudulent-flag-overlay .c-price')
+  .innerHTML = `&#8358 ${parseInt(price, 10).toLocaleString('en-US')}`;
+
   fraudModal.style.display = 'block';
+
+  flagAdBtn.onclick = (e) => {
+    e.preventDefault();
+    const reason = document.querySelector('.flagging-form .reason').value;
+    const description = document.querySelector('.flagging-form .description').value;
+    if (reason.length < 3 || description.length <= 1) {
+      message.innerHTML = 'Ensure you select a reason for your flag, and a description of the flag is given.';
+      notificationModal.style.display = 'block';
+      return 0;
+    }
+
+    const data = { car_id: id, reason, description };
+    const init = {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: { 'Content-Type': 'application/json', authorization: `Bearer ${token}` },
+    };
+    fetch(`${urlPrefix}/api/v1/flag`, init)
+    .then(res => res.json())
+    .then((response) => {
+      const res = response;
+      if (res.status === 201) {
+        message.innerHTML = `${res.message}<br/>Car Ad Owner: ${res.data.owner_name}`;
+        document.querySelector('.flagging-form .reason').value = null;
+        document.querySelector('.flagging-form .description').value = null;
+      } else {
+        message.innerHTML = res.error;
+      }
+      purchaseModal.style.display = 'none';
+      notificationModal.style.display = 'block';
+    });
+    return 0;
+  };
 };
 
 // used to get details of a car from the database
@@ -152,16 +191,32 @@ const getCarDetils = (carId) => {
       btnGrp.setAttribute('class', 'btn-group flex-container');
       orderBtn.setAttribute('class', 'half-btn btn');
       orderBtn.onclick = () => {
-        openPurchaseModal({
-          id, name, price, body_type,
-        });
+        if (is_loggedin) {
+          openPurchaseModal({
+            id, name, price, body_type,
+          });
+        } else {
+          message.innerHTML = `Please ensure you are logged-in before placing an order.<br/>
+          If you don't have an account on AutoMart,<br/><a href='./signup.html'>Click here to Sign-up.</a>
+          <br/>else,<br/><a href='./signin.html'>Click here to Sign-in.</a>`;
+          notificationModal.style.display = 'block';
+          toggleScroll();
+        }
       };
       orderBtn.innerHTML = 'Place Order';
       flagBtn.setAttribute('class', 'half-btn btn');
       flagBtn.onclick = () => {
-        openFraudModal({
-          id, name, price, body_type,
-        });
+        if (is_loggedin) {
+          openFraudModal({
+            id, name, price, body_type,
+          });
+        } else {
+          message.innerHTML = `Please ensure you are logged-in before flagging an AD.<br/>
+          If you don't have an account on AutoMart,<br/><a href='./signup.html'>Click here to Sign-up.</a>
+          <br/>else,<br/><a href='./signin.html'>Click here to Sign-in.</a>`;
+          notificationModal.style.display = 'block';
+          toggleScroll();
+        }
       };
       flagBtn.innerHTML = 'Flag Fradulent AD';
       if (owner_id === parseInt(user_id, 10)) {
@@ -177,7 +232,6 @@ const getCarDetils = (carId) => {
       carDetails.appendChild(otherInfo);
       carPreviewModal.appendChild(carDetails);
     } else {
-      const message = document.querySelector('#notification-overlay .message');
       message.innerHTML = response.error;
       notificationModal.style.display = 'block';
       toggleScroll();
@@ -212,9 +266,19 @@ const fetchCarAds = (url, msgIfEmpty) => {
         };
         carInfo.classList.add('car-info');
         orderBtn.classList.add('order', 'full-btn', 'btn');
-        orderBtn.onclick = () => openPurchaseModal({
-          id, name, price, body_type,
-        });
+        orderBtn.onclick = () => {
+          if (is_loggedin) {
+            openPurchaseModal({
+              id, name, price, body_type,
+            });
+          } else {
+            message.innerHTML = `Please ensure you are logged-in before placing an order.<br/>
+            If you don't have an account on AutoMart,<br/><a href='./signup.html'>Click here to Sign-up.</a>
+            <br/>else,<br/><a href='./signin.html'>Click here to Sign-in.</a>`;
+            notificationModal.style.display = 'block';
+            toggleScroll();
+          }
+        };
         orderBtn.innerHTML = 'Place Order';
         if (owner_id === parseInt(user_id, 10)) {
           orderBtn.setAttribute('disabled', 'disabled');
@@ -235,7 +299,6 @@ const fetchCarAds = (url, msgIfEmpty) => {
     }
   })
   .catch((error) => {
-    const message = document.querySelector('#notification-overlay .message');
     message.innerHTML = error;
     notificationModal.style.display = 'block';
     toggleScroll();
@@ -272,6 +335,8 @@ closePurModal.onclick = (e) => {
 closeFraudModal.onclick = (e) => {
   e.preventDefault();
   fraudModal.style.display = 'none';
+  document.querySelector('.flagging-form .reason').value = null;
+  document.querySelector('.flagging-form .description').value = null;
   toggleScroll();
 };
 
