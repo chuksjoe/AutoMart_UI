@@ -15,11 +15,6 @@ const token = sessionStorage.getItem('token');
 const urlPrefix = 'https://auto-mart-adc.herokuapp.com';
 
 /* ================ Helper funtions ================= */
-const autoRefresh = (time) => {
-  setTimeout(() => {
-    document.location.reload();
-  }, time);
-};
 const deleteAd = (params) => {
   const { id, name } = params;
   const confirm = document.querySelector('#confirmation-overlay .yes');
@@ -44,8 +39,8 @@ const deleteAd = (params) => {
       }
       confirmationModal.style.display = 'none';
       notificationModal.style.display = 'block';
+      autoRefresh(3000);
     });
-    autoRefresh(3000);
   };
   decline.onclick = (e) => {
     e.preventDefault();
@@ -96,8 +91,8 @@ const openUpdateModal = (params) => {
       }
       updatePriceModal.style.display = 'none';
       notificationModal.style.display = 'block';
+      autoRefresh(3000);
     });
-    autoRefresh(3000);
     return 0;
   };
 };
@@ -128,8 +123,8 @@ const updateAdStatus = (params) => {
       }
       confirmationModal.style.display = 'none';
       notificationModal.style.display = 'block';
+      autoRefresh(3000);
     });
-    autoRefresh(3000);
   };
   decline.onclick = (e) => {
     e.preventDefault();

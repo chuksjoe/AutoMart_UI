@@ -40,6 +40,12 @@ const configDate = (dateStr) => {
    ${appendLeadZero(date.getDate())} ${months[date.getMonth()]} ${date.getFullYear()}, ${time}`;
 };
 
+const autoRefresh = (time) => {
+  setTimeout(() => {
+    document.location.reload();
+  }, time);
+};
+
 /* ============ MAIN LOGICS ========================= */
 // Toggle Menubar filter bar when the screen is below 800px
 const menuList = document.querySelector('.menu-list');
