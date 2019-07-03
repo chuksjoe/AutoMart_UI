@@ -81,9 +81,9 @@ window.onload = () => {
         const btnGrp = document.createElement('div');
         const acceptOrderBtn = document.createElement('button');
         const declineOrderBtn = document.createElement('button');
+        const setBackground = status === 'Rejected' ? '#D61313' : '#48F038';
 
         orderCard.setAttribute('class', 'history-list-item flex-container');
-        const setBackground = status === 'Rejected' ? '#D61313' : '#48F038';
         orderCard.innerHTML = `
         <div class="purchase-date p-15">
 					<p>${configDate(created_on)}</p>
