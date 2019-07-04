@@ -36,12 +36,12 @@ const deleteAd = (params) => {
     .then((response) => {
       if (response.status === 200) {
         message.innerHTML = response.message;
+        autoRefresh(3000);
       } else {
         message.innerHTML = response.error;
       }
       confirmationModal.style.display = 'none';
       notificationModal.style.display = 'block';
-      autoRefresh(3000);
     });
   };
   decline.onclick = (e) => {
@@ -91,13 +91,12 @@ const openUpdateModal = (params) => {
         Actual Price: &#8358 ${parseInt(res.data.price, 10).toLocaleString('en-US')}<br/>
         Old Price Offered: &#8358 ${parseInt(old_price_offered, 10).toLocaleString('en-US')}<br/>
         New Price Offered: &#8358 ${parseInt(new_price_offered, 10).toLocaleString('en-US')}`;
+        autoRefresh(3000);
       } else {
-        message.innerHTML = `${res.error}<br/>Please ensure you are logged-in before placing an order.<br/>
-        If you don't have an account on AutoMart,<br/><a href='/api/v1/signup'>Click here to Sign-up.</a>`;
+        message.innerHTML = res.error;
       }
       updatePriceModal.style.display = 'none';
       notificationModal.style.display = 'block';
-      autoRefresh(3000);
     });
     return 0;
   };

@@ -34,6 +34,7 @@ const reactToOffer = (params) => {
         You have successfully <b>${action}ed</b> ${buyer_name}'s offer for
         <b>${car_name}</b><br/>Price of Car: ${parseInt(price, 10).toLocaleString('en-US')}<br/>
         Price Offered: ${parseInt(price_offered, 10).toLocaleString('en-US')}`;
+        autoRefresh(3000);
       } else {
         message.innerHTML = response.error;
       }
@@ -129,7 +130,7 @@ window.onload = () => {
     }
   })
   .catch((error) => {
-    message.innerHTML = `${error}<br/>Ensure you are connected to the internet.<br/>Click on Close to refresh page.`;
+    message.innerHTML = `${error}<br/>Ensure you are connected to the internet.<br/>Then, refresh page.`;
     notificationModal.style.display = 'block';
     toggleScroll();
   });
@@ -138,5 +139,4 @@ window.onload = () => {
 closeNotifation.onclick = (e) => {
   e.preventDefault();
   notificationModal.style.display = 'none';
-  autoRefresh(0);
 };

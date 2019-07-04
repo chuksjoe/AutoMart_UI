@@ -34,12 +34,12 @@ const deleteAd = (params) => {
     .then((response) => {
       if (response.status === 200) {
         message.innerHTML = response.message;
+        autoRefresh(3000);
       } else {
         message.innerHTML = response.error;
       }
       confirmationModal.style.display = 'none';
       notificationModal.style.display = 'block';
-      autoRefresh(3000);
     });
   };
   decline.onclick = (e) => {
@@ -85,13 +85,12 @@ const openUpdateModal = (params) => {
         message.innerHTML = `You have successfully updated the price for <b>${res.data.name}.</b><br/><br/>
         Old Price: &#8358 ${parseInt(price, 10).toLocaleString('en-US')}<br/>
         New Price: &#8358 ${parseInt(res.data.price, 10).toLocaleString('en-US')}`;
+        autoRefresh(3000);
       } else {
-        message.innerHTML = `${res.error}<br/>Please ensure you are logged-in before accessing this page.<br/>
-        If you don't have an account on AutoMart,<br/><a href='/api/v1/signup'>Click here to Sign-up.</a>`;
+        message.innerHTML = res.error;
       }
       updatePriceModal.style.display = 'none';
       notificationModal.style.display = 'block';
-      autoRefresh(3000);
     });
     return 0;
   };
@@ -117,13 +116,12 @@ const updateAdStatus = (params) => {
       const res = response;
       if (res.status === 200) {
         message.innerHTML = res.message;
+        autoRefresh(3000);
       } else {
-        message.innerHTML = `${res.error}<br/>Please ensure you are logged-in before accessing this page.<br/>
-        If you don't have an account on AutoMart,<br/><a href='/api/v1/signup'>Click here to Sign-up.</a>`;
+        message.innerHTML = res.error;
       }
       confirmationModal.style.display = 'none';
       notificationModal.style.display = 'block';
-      autoRefresh(3000);
     });
   };
   decline.onclick = (e) => {
