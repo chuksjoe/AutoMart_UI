@@ -1,7 +1,9 @@
 const carPreview = document.getElementById('car-preview-overlay');
+const flagList = document.getElementById('flag-listing-overlay');
 const notificationModal = document.getElementById('notification-overlay');
 const confirmationModal = document.getElementById('confirmation-overlay');
 const closeCarPreview = document.getElementById('close-car-preview');
+const closeFlagList = document.getElementById('close-flag-listing');
 const closeNotifation = document.querySelector('.close-notification');
 const message = document.querySelector('#notification-overlay .message');
 const confMsg = document.querySelector('#confirmation-overlay .message');
@@ -14,6 +16,71 @@ const token = sessionStorage.getItem('token');
 const urlPrefix = 'https://auto-mart-adc.herokuapp.com';
 
 /* ================ Helper funtions ================= */
+const viewFlagList = (carId, carName) => {
+  const flagListModal = document.querySelector('#flag-listing-overlay .flag-list');
+  flagListModal.innerHTML = '<div id="loading"><img src="../images/loader.gif" /></div>';
+  flagListModal.style.textAlign = 'left';
+  document.querySelector('#flag-listing-overlay .modal-header').innerHTML = carName;
+  flagList.style.display = 'block';
+  toggleScroll();
+
+  const init = {
+    method: 'GET',
+    headers: { authorization: `Bearer ${token}` },
+  };
+  fetch(`${urlPrefix}/api/v1/flag/${carId}`, init)
+  .then(res => res.json())
+  .then((response) => {
+    const res = response;
+    if (res.data.length > 0) {
+      flagListModal.innerHTML = null;
+      res.data.map((flag) => {
+        const {
+          id, reporter_id, owner_name, reason, description, status, created_on,
+        } = flag;
+        const flagCard = document.createElement('li');
+        const btnGrp = document.createElement('div');
+        const markAddressed = document.createElement('button');
+        const deleteFlagBtn = document.createElement('button');
+
+        flagCard.setAttribute('class', 'flag-details flex-container');
+        flagCard.innerHTML = `
+        <div class="date-time p-15">
+          <p>${configDate(created_on)}</p>
+          <label class="f-status">${status}</label>
+        </div>
+        <div class="flag-main-desc">
+          <h3>Reason: ${reason}</h3>
+          <p>Description: ${description}</p>
+          <p>Car Owner: ${owner_name}, Reporter ID: ${reporter_id}, Flag ID: ${id}</p>
+        </div>`;
+
+        markAddressed.setAttribute('class', 'mark-addressed full-btn btn');
+        markAddressed.innerHTML = 'Mark Addressed';
+        deleteFlagBtn.setAttribute('class', 'del-flag delete full-btn btn');
+        deleteFlagBtn.innerHTML = 'Delete Flag';
+        deleteFlagBtn.onclick = () => {};
+        btnGrp.setAttribute('class', 'flag-actions p-15');
+        btnGrp.appendChild(markAddressed);
+        btnGrp.appendChild(deleteFlagBtn);
+
+        flagCard.appendChild(btnGrp);
+        flagListModal.appendChild(flagCard);
+        return 0;
+      });
+    } else {
+      // the car list is empty
+      flagListModal.style.textAlign = 'center';
+      flagListModal.innerHTML = 'This car Ad has not been flagged.';
+    }
+  })
+  .catch((error) => {
+    message.innerHTML = error;
+    notificationModal.style.display = 'block';
+    toggleScroll();
+  });
+};
+
 const deleteAd = (params) => {
   const {
     id, name, owner_id, owner_name,
@@ -81,6 +148,9 @@ const fetchCarAds = (url, msgIfEmpty) => {
 
           viewFlagsBtnPrev.setAttribute('class', 'view-reports half-btn btn');
           viewFlagsBtnPrev.innerHTML = 'View Flags';
+          viewFlagsBtnPrev.onclick = () => {
+            viewFlagList(id, name);
+          };
           deleteAdBtnPrev.setAttribute('class', 'delete half-btn btn');
           deleteAdBtnPrev.innerHTML = 'Delete Ad';
           deleteAdBtnPrev.onclick = () => {
@@ -106,9 +176,12 @@ const fetchCarAds = (url, msgIfEmpty) => {
                             <p><b>Body type:</b> ${body_type}</p>
                             <p>Posted by ${owner_name}, on: ${configDate(created_on)}</p>`;
 
-        viewFlagsBtn.setAttribute('class', 'view-reports full-btn btn');
+        viewFlagsBtn.setAttribute('class', 'view-reports full-btn btn b49');
         viewFlagsBtn.innerHTML = 'View Flags';
-        deleteAdBtn.setAttribute('class', 'delete full-btn btn');
+        viewFlagsBtn.onclick = () => {
+          viewFlagList(id, name);
+        };
+        deleteAdBtn.setAttribute('class', 'delete full-btn btn b49');
         deleteAdBtn.innerHTML = 'Delete Ad';
         deleteAdBtn.onclick = () => {
           deleteAd({
@@ -158,8 +231,12 @@ closeCarPreview.onclick = () => {
   toggleScroll();
 };
 
+closeFlagList.onclick = () => {
+  flagList.style.display = 'none';
+  toggleScroll();
+};
+
 closeNotifation.onclick = (e) => {
   e.preventDefault();
   notificationModal.style.display = 'none';
-  document.location.reload();
 };

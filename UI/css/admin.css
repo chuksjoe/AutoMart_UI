@@ -31,6 +31,32 @@
 	border-left: 2px solid #eee;
 }
 
+/*Flag listing styles*/
+.flag-list {
+	padding: 0;
+}
+.flag-details {
+	margin: 10px 0;
+	background-color: #eee;
+
+}
+.date-time {
+	width: 20%;
+	position: relative;
+}
+.flag-main-desc {
+	width: 55%;
+}
+.flag-actions {
+	width: 25%;
+}
+.f-status {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  background-color: #FEBD2D;
+  padding: 5px 10px;
+}
 @media only screen and (max-width: 1090px) {
 	.filter-sidebar {
 		width: 35%;
@@ -55,7 +81,7 @@
 	.car-image {
 		padding: 10px 100px;
 	}
-	.full-btn {
+	.b49 {
 		width: 49%;
 	}
 	.car-state-tag {
@@ -88,4 +114,27 @@
     background-color: #fff;
     color: #000;
   }
+}
+
+@media only screen and (max-width: 660px) {
+	.date-time,
+	.flag-main-desc,
+	.flag-actions {
+		width: 100%;
+	}
+	.date-time p {
+		margin: 0;
+	}
+	.flag-main-desc {
+		padding: 0 15px;
+		margin-top: -10px;
+		margin-bottom: -20px;
+	}
+	.flag-actions {
+		display: flex;
+		justify-content: space-between;
+	}
+	.full-btn {
+		width: 49%;
+	}
 }
