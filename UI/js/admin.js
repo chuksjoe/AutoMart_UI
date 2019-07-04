@@ -16,6 +16,42 @@ const token = sessionStorage.getItem('token');
 const urlPrefix = 'https://auto-mart-adc.herokuapp.com';
 
 /* ================ Helper funtions ================= */
+const markAddressed = (params) => {
+  const {
+    id, car_name, owner_name, owner_id,
+  } = params;
+  const confirm = document.querySelector('#confirmation-overlay .yes');
+  const decline = document.querySelector('#confirmation-overlay .no');
+
+  confMsg.innerHTML = `Are you sure you want to mark<br/>flag with ID ${id} placed on<br/><b>${car_name}</b>
+  <br/>owned by ${(owner_id === parseInt(user_id, 10) ? 'you' : owner_name)} as Addressed?`;
+  confirmationModal.style.display = 'block';
+
+  confirm.onclick = (e) => {
+    e.preventDefault();
+    const init = {
+      method: 'PATCH',
+      headers: { authorization: `Bearer ${token}` },
+    };
+    fetch(`${urlPrefix}/api/v1/flag/${id}/status`, init)
+    .then(res => res.json())
+    .then((response) => {
+      if (response.status === 200) {
+        message.innerHTML = response.message;
+        autoRefresh(3000);
+      } else {
+        message.innerHTML = response.error;
+      }
+      confirmationModal.style.display = 'none';
+      notificationModal.style.display = 'block';
+    });
+  };
+  decline.onclick = (e) => {
+    e.preventDefault();
+    confirmationModal.style.display = 'none';
+  };
+};
+
 const viewFlagList = (carId, carName) => {
   const flagListModal = document.querySelector('#flag-listing-overlay .flag-list');
   flagListModal.innerHTML = '<div id="loading"><img src="../images/loader.gif" /></div>';
@@ -36,18 +72,19 @@ const viewFlagList = (carId, carName) => {
       flagListModal.innerHTML = null;
       res.data.map((flag) => {
         const {
-          id, reporter_id, owner_name, reason, description, status, created_on,
+          id, reporter_id, owner_name, owner_id, reason, description, status, created_on, car_name,
         } = flag;
         const flagCard = document.createElement('li');
         const btnGrp = document.createElement('div');
-        const markAddressed = document.createElement('button');
+        const markAddressedBtn = document.createElement('button');
         const deleteFlagBtn = document.createElement('button');
 
         flagCard.setAttribute('class', 'flag-details flex-container');
         flagCard.innerHTML = `
         <div class="date-time p-15">
           <p>${configDate(created_on)}</p>
-          <label class="f-status">${status}</label>
+          <label class="f-status"
+          style="background:${status === 'Pending' ? '#FEBD2D' : '#48F038'}">${status}</label>
         </div>
         <div class="flag-main-desc">
           <h3>Reason: ${reason}</h3>
@@ -55,13 +92,18 @@ const viewFlagList = (carId, carName) => {
           <p>Car Owner: ${owner_name}, Reporter ID: ${reporter_id}, Flag ID: ${id}</p>
         </div>`;
 
-        markAddressed.setAttribute('class', 'mark-addressed full-btn btn');
-        markAddressed.innerHTML = 'Mark Addressed';
+        markAddressedBtn.setAttribute('class', 'mark-addressed full-btn btn');
+        markAddressedBtn.innerHTML = 'Mark Addressed';
+        markAddressedBtn.onclick = () => {
+          markAddressed({
+            id, car_name, owner_name, owner_id,
+          });
+        };
         deleteFlagBtn.setAttribute('class', 'del-flag delete full-btn btn');
         deleteFlagBtn.innerHTML = 'Delete Flag';
-        deleteFlagBtn.onclick = () => {};
+
         btnGrp.setAttribute('class', 'flag-actions p-15');
-        btnGrp.appendChild(markAddressed);
+        btnGrp.appendChild(markAddressedBtn);
         btnGrp.appendChild(deleteFlagBtn);
 
         flagCard.appendChild(btnGrp);
@@ -96,19 +138,19 @@ const deleteAd = (params) => {
     e.preventDefault();
     const init = {
       method: 'DELETE',
-      headers: { 'Content-Type': 'application/json', authorization: `Bearer ${token}` },
+      headers: { authorization: `Bearer ${token}` },
     };
     fetch(`${urlPrefix}/api/v1/car/${id}`, init)
     .then(res => res.json())
     .then((response) => {
       if (response.status === 200) {
         message.innerHTML = response.message;
+        autoRefresh(3000);
       } else {
         message.innerHTML = response.error;
       }
       confirmationModal.style.display = 'none';
       notificationModal.style.display = 'block';
-      autoRefresh(3000);
     });
   };
   decline.onclick = (e) => {
