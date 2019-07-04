@@ -492,6 +492,11 @@ h3.c-details-mv {
   text-align: center;
 }
 
+/*for history and flagging lists*/
+.p-15 {
+  padding: 15px;
+}
+
 @media only screen and (max-width: 800px) {
   .content {
     display: block;
