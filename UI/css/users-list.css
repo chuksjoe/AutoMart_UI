@@ -1,0 +1,41 @@
+h2 {
+	text-align: center;
+}
+
+.user-list-item {
+	max-width: 1000px;
+	margin: 0 auto 10px;
+	background-color: #fff;
+	list-style: none;
+	padding: 15px;
+	box-shadow: 0 0 3px #333;
+}
+.user-details {
+	width: 75%;
+}
+.admin-actions {
+	width: 25%;
+}
+.user-name {
+	margin-bottom: 10px;
+}
+.user-details p {
+	margin: 5px 0;
+}
+.user-details span {
+	display: inline-block;
+}
+
+@media only screen and (max-width: 700px) {
+	.user-details,
+	.admin-actions {
+		width: 100%;
+	}
+	.admin-actions {
+		display: flex;
+		justify-content: space-between;
+	}
+	.full-btn {
+		width: 33%;
+	}
+}
