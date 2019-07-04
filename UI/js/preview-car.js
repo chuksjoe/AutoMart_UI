@@ -30,8 +30,8 @@ const previewCar = (carId, btnGrp) => {
         <p class="prop"><b>Color:</b><br>${color}</p>
         <p class="prop"><b>Year:</b><br>${year}</p>
         <p class="prop"><b>Fuel Type:</b><br>${fuel_type}</p>
-        <p class="prop"><b>Fuel Capacity:</b><br>${fuel_cap}L</p>
-        <p class="prop"><b>Mileage:</b><br>${mileage.toLocaleString('en-US')}km</p>
+        <p class="prop"><b>Fuel Capacity:</b><br>${fuel_cap}Liter</p>
+        <p class="prop"><b>Mileage:</b><br>${mileage.toLocaleString('en-US')}mpg</p>
         <p class="prop"><b>Transmission:</b><br>${transmission_type}</p>
         <p class="prop"><b>Doors:</b><br>${doors} doors</p>
         <p class="prop"><b>Posted By:</b><br>${(owner_id === parseInt(user_id, 10) ? 'Me' : owner_name)}</p>
@@ -49,9 +49,9 @@ const previewCar = (carId, btnGrp) => {
       </div>`;
 
       mainDesc.appendChild(btnGrp);
-      carPreviewModal.innerHTML = null;
       carDetails.appendChild(mainDesc);
       carDetails.appendChild(otherInfo);
+      carPreviewModal.innerHTML = null;
       carPreviewModal.appendChild(carDetails);
     } else {
       message.innerHTML = response.error;
