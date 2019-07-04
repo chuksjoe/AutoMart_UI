@@ -16,6 +16,42 @@ const token = sessionStorage.getItem('token');
 const urlPrefix = 'https://auto-mart-adc.herokuapp.com';
 
 /* ================ Helper funtions ================= */
+const deleteFlag = (params) => {
+  const {
+    id, car_name, owner_name, owner_id,
+  } = params;
+  const confirm = document.querySelector('#confirmation-overlay .yes');
+  const decline = document.querySelector('#confirmation-overlay .no');
+
+  confMsg.innerHTML = `Are you sure you want to delete<br/>flag with ID ${id} placed on<br/><b>${car_name}</b>
+  <br/>owned by ${(owner_id === parseInt(user_id, 10) ? 'you' : owner_name)}?`;
+  confirmationModal.style.display = 'block';
+
+  confirm.onclick = (e) => {
+    e.preventDefault();
+    const init = {
+      method: 'DELETE',
+      headers: { authorization: `Bearer ${token}` },
+    };
+    fetch(`${urlPrefix}/api/v1/flag/${id}`, init)
+    .then(res => res.json())
+    .then((response) => {
+      if (response.status === 200) {
+        message.innerHTML = response.message;
+        autoRefresh(3000);
+      } else {
+        message.innerHTML = response.error;
+      }
+      confirmationModal.style.display = 'none';
+      notificationModal.style.display = 'block';
+    });
+  };
+  decline.onclick = (e) => {
+    e.preventDefault();
+    confirmationModal.style.display = 'none';
+  };
+};
+
 const markAddressed = (params) => {
   const {
     id, car_name, owner_name, owner_id,
@@ -101,6 +137,11 @@ const viewFlagList = (carId, carName) => {
         };
         deleteFlagBtn.setAttribute('class', 'del-flag delete full-btn btn');
         deleteFlagBtn.innerHTML = 'Delete Flag';
+        deleteFlagBtn.onclick = () => {
+          deleteFlag({
+            id, car_name, owner_name, owner_id,
+          });
+        };
 
         btnGrp.setAttribute('class', 'flag-actions p-15');
         btnGrp.appendChild(markAddressedBtn);
