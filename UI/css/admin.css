@@ -49,6 +49,8 @@
 	.admin-actions {
 		border-left: none;
 		border-top: 2px solid #eee;
+		display: flex;
+		justify-content: space-between;
 	}
 	.car-image {
 		padding: 10px 100px;
