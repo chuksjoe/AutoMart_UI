@@ -124,7 +124,7 @@ filterContent += `
       Lamborghini
     </label>
     <label>
-      <input type="radio" name="manufacturer" class="manufacturer common-seletor" value="Land-Rover">
+      <input type="radio" name="manufacturer" class="manufacturer common-seletor" value="Land Rover">
       Land Rover
     </label>
     <label>
@@ -156,7 +156,7 @@ filterContent += `
       Renault
     </label>
     <label>
-      <input type="radio" name="manufacturer" class="manufacturer common-seletor" value="Rolls-Royce">
+      <input type="radio" name="manufacturer" class="manufacturer common-seletor" value="Rolls Royce">
       Rolls Royce
     </label>
     <label>
@@ -185,40 +185,28 @@ filterContent += `
       All
     </label>
     <label>
-      <input type="radio" name="body-type" class="body-type common-seletor" value="Micro">
-      Micro
-    </label>
-    <label>
       <input type="radio" name="body-type" class="body-type common-seletor" value="Convertible">
       Convertible
-    </label>
-    <label>
-      <input type="radio" name="body-type" class="body-type common-seletor" value="Large Van">
-      Large Van
-    </label>
-    <label>
-      <input type="radio" name="body-type" class="body-type common-seletor" value="Large SUV">
-      Large SUV
-    </label>
-    <label>
-      <input type="radio" name="body-type" class="body-type common-seletor" value="Small Van">
-      Small Van
     </label>
     <label>
       <input type="radio" name="body-type" class="body-type common-seletor" value="Coupe">
       Coupe
     </label>
     <label>
-      <input type="radio" name="body-type" class="body-type common-seletor" value="Sudan">
-      Sudan
+      <input type="radio" name="body-type" class="body-type common-seletor" value="Hatch">
+      Hatch
     </label>
     <label>
-      <input type="radio" name="body-type" class="body-type common-seletor" value="Truck">
-      Truck
+      <input type="radio" name="body-type" class="body-type common-seletor" value="Large SUV">
+      Large SUV
     </label>
     <label>
-      <input type="radio" name="body-type" class="body-type common-seletor" value="Truck Cab">
-      Truck Cab
+      <input type="radio" name="body-type" class="body-type common-seletor" value="Large Van">
+      Large Van
+    </label>
+    <label>
+      <input type="radio" name="body-type" class="body-type common-seletor" value="Micro">
+      Micro
     </label>
     <label>
       <input type="radio" name="body-type" class="body-type common-seletor" value="MPV">
@@ -229,8 +217,24 @@ filterContent += `
       Pick Up
     </label>
     <label>
-      <input type="radio" name="body-type" class="body-type common-seletor" value="Hatch">
-      Hatch
+      <input type="radio" name="body-type" class="body-type common-seletor" value="Small SUV">
+      Small SUV
+    </label>
+    <label>
+      <input type="radio" name="body-type" class="body-type common-seletor" value="Small Van">
+      Small Van
+    </label>
+    <label>
+      <input type="radio" name="body-type" class="body-type common-seletor" value="Sudan">
+      Sudan
+    </label>
+    <label>
+      <input type="radio" name="body-type" class="body-type common-seletor" value="Truck Cab">
+      Truck Cab
+    </label>
+    <label>
+      <input type="radio" name="body-type" class="body-type common-seletor" value="Truck Jeep">
+      Truck Jeep
     </label>
   </div>
 </div>`;
