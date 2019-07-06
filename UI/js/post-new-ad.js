@@ -158,14 +158,16 @@ postAdBtn.onclick = (e) => {
 				Price: &#8358 ${parseInt(res.data.price, 10).toLocaleString('en-US')}<br/>
 				Body type: ${res.data.body_type}<br>
 				click <a href='./marketplace.html'>here to check it out on marketplace.</a>`;
+				clearFormFields();
 			}
-			errorDiv.classList.remove('hide');
 			postAdBtn.innerHTML = 'Post New AD';
 			postAdBtn.disabled = null;
-			clearFormFields();
 		})
 		.catch((error) => {
-			errorDiv.innerHTML = error;
+			errorDiv.innerHTML = errorMessage(error);
+		})
+		.finally(() => {
+			errorDiv.classList.remove('hide');
 		});
 	}
 };

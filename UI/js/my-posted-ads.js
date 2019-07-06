@@ -14,6 +14,11 @@ const token = sessionStorage.getItem('token');
 
 const urlPrefix = 'https://auto-mart-adc.herokuapp.com';
 
+// used for selecting the right url for filtering
+const currentPage = 'my-ads';
+
+let hasUpdatedInfo = false;
+
 /* ================ Helper funtions ================= */
 const deleteAd = (params) => {
   const { id, name } = params;
@@ -22,6 +27,7 @@ const deleteAd = (params) => {
 
   confMsg.innerHTML = `Are you sure you want to delete<br/><b>${name}</b>?`;
   confirmationModal.style.display = 'block';
+  toggleScroll();
 
   confirm.onclick = (e) => {
     e.preventDefault();
@@ -34,17 +40,22 @@ const deleteAd = (params) => {
     .then((response) => {
       if (response.status === 200) {
         message.innerHTML = response.message;
-        autoRefresh(3000);
+        hasUpdatedInfo = true;
       } else {
         message.innerHTML = response.error;
       }
       confirmationModal.style.display = 'none';
+      notificationModal.style.display = 'block';
+    })
+    .catch((err) => {
+      message.innerHTML = errorMessage(err);
       notificationModal.style.display = 'block';
     });
   };
   decline.onclick = (e) => {
     e.preventDefault();
     confirmationModal.style.display = 'none';
+    toggleScroll();
   };
 };
 
@@ -85,11 +96,15 @@ const openUpdateModal = (params) => {
         message.innerHTML = `You have successfully updated the price for <b>${res.data.name}.</b><br/><br/>
         Old Price: &#8358 ${parseInt(price, 10).toLocaleString('en-US')}<br/>
         New Price: &#8358 ${parseInt(res.data.price, 10).toLocaleString('en-US')}`;
-        autoRefresh(3000);
+        hasUpdatedInfo = true;
       } else {
         message.innerHTML = res.error;
       }
       updatePriceModal.style.display = 'none';
+      notificationModal.style.display = 'block';
+    })
+    .catch((err) => {
+      message.innerHTML = errorMessage(err);
       notificationModal.style.display = 'block';
     });
     return 0;
@@ -103,6 +118,7 @@ const updateAdStatus = (params) => {
 
   confMsg.innerHTML = `Are you sure you want to mark<br/><b>${name}</b><br/>as sold?`;
   confirmationModal.style.display = 'block';
+  toggleScroll();
 
   confirm.onclick = (e) => {
     e.preventDefault();
@@ -116,17 +132,22 @@ const updateAdStatus = (params) => {
       const res = response;
       if (res.status === 200) {
         message.innerHTML = res.message;
-        autoRefresh(3000);
+        hasUpdatedInfo = true;
       } else {
         message.innerHTML = res.error;
       }
       confirmationModal.style.display = 'none';
+      notificationModal.style.display = 'block';
+    })
+    .catch((err) => {
+      message.innerHTML = errorMessage(err);
       notificationModal.style.display = 'block';
     });
   };
   decline.onclick = (e) => {
     e.preventDefault();
     confirmationModal.style.display = 'none';
+    toggleScroll();
   };
 };
 
@@ -231,7 +252,8 @@ const fetchCarAds = (url, msgIfEmpty) => {
     }
   })
   .catch((error) => {
-    message.innerHTML = error;
+    message.innerHTML = errorMessage(error);
+    carList.innerHTML = errorMessage(error);
     notificationModal.style.display = 'block';
     toggleScroll();
   });
@@ -261,6 +283,8 @@ closeCarPreview.onclick = () => {
 closeNotifation.onclick = (e) => {
   e.preventDefault();
   notificationModal.style.display = 'none';
+  toggleScroll();
+  if (hasUpdatedInfo) autoRefresh(0);
 };
 
 closeUpdateModal.onclick = (e) => {
@@ -269,52 +293,3 @@ closeUpdateModal.onclick = (e) => {
   document.querySelector('.update-price-form .price').value = null;
   toggleScroll();
 };
-
-/* ============= MANAGE FILTER LOGICS HERE ============= */
-const filterSelectors = document.querySelectorAll('.common-seletor');
-const variables = {
-  min_price: null,
-  max_price: null,
-  manufacturer: null,
-  body_type: null,
-  state: null,
-  status: null,
-};
-
-filterSelectors.forEach((selector) => {
-  const sel = selector;
-  sel.onchange = () => {
-    let url = `${urlPrefix}/api/v1/car?owner_id=${user_id}`;
-
-    if (sel.classList.contains('min-price')) {
-      const val = sel.value.replace(/\D/g, '');
-      variables.min_price = isNaN(parseFloat(val)) ? null : parseFloat(val);
-    } else if (sel.classList.contains('max-price')) {
-      const val = sel.value.replace(/\D/g, '');
-      variables.max_price = isNaN(parseFloat(val)) ? null : parseFloat(val);
-    } else if (sel.classList.contains('manufacturer')) {
-      if (sel.checked) {
-        variables.manufacturer = sel.value === 'on' ? null : sel.value;
-      }
-    } else if (sel.classList.contains('body-type')) {
-      if (sel.checked) {
-        variables.body_type = sel.value === 'on' ? null : sel.value;
-      }
-    } else if (sel.classList.contains('state')) {
-      if (sel.checked) {
-        variables.state = sel.value === 'on' ? null : sel.value;
-      }
-    } else if (sel.classList.contains('status')) {
-      if (sel.checked) {
-        variables.status = sel.value === 'on' ? null : sel.value;
-      }
-    }
-    Object.keys(variables).forEach((key) => {
-      if (variables[key] !== null) {
-        url += `&${key}=${variables[key]}`;
-      }
-    });
-    fetchCarAds(url, 'No car AD matches the filter parameter.');
-  };
-  return 0;
-});

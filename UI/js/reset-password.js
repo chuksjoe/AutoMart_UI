@@ -61,7 +61,7 @@ resetPass.onclick = (e) => {
 			}
 		})
 		.catch((err) => {
-			errorDiv.innerHTML = err;
+			errorDiv.innerHTML = errorMessage(err);
 		})
 		.finally(() => {
 			if (success) {

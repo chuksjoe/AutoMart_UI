@@ -10,6 +10,8 @@ const token = sessionStorage.getItem('token');
 
 const urlPrefix = 'https://auto-mart-adc.herokuapp.com';
 
+let hasUpdatedInfo = false;
+
 const reactToOffer = (params) => {
   const {
     id, car_name, price, price_offered, buyer_name, action,
@@ -19,6 +21,7 @@ const reactToOffer = (params) => {
 
   confMsg.innerHTML = `Are you sure you want to ${action} offer<br/>for <b>${car_name}</b><br/>from ${buyer_name}?`;
   confirmationModal.style.display = 'block';
+  toggleScroll();
 
   confirm.onclick = (e) => {
     e.preventDefault();
@@ -34,17 +37,22 @@ const reactToOffer = (params) => {
         You have successfully <b>${action}ed</b> ${buyer_name}'s offer for
         <b>${car_name}</b><br/>Price of Car: ${parseInt(price, 10).toLocaleString('en-US')}<br/>
         Price Offered: ${parseInt(price_offered, 10).toLocaleString('en-US')}`;
-        autoRefresh(3000);
+        hasUpdatedInfo = true;
       } else {
         message.innerHTML = response.error;
       }
       confirmationModal.style.display = 'none';
+      notificationModal.style.display = 'block';
+    })
+    .catch((err) => {
+      message.innerHTML = errorMessage(err);
       notificationModal.style.display = 'block';
     });
   };
   decline.onclick = (e) => {
     e.preventDefault();
     confirmationModal.style.display = 'none';
+    toggleScroll();
   };
 };
 
@@ -130,7 +138,8 @@ window.onload = () => {
     }
   })
   .catch((error) => {
-    message.innerHTML = `${error}<br/>Ensure you are connected to the internet.<br/>Then, refresh page.`;
+    message.innerHTML = errorMessage(error);
+    historyList.innerHTML = errorMessage(error);
     notificationModal.style.display = 'block';
     toggleScroll();
   });
@@ -139,4 +148,6 @@ window.onload = () => {
 closeNotifation.onclick = (e) => {
   e.preventDefault();
   notificationModal.style.display = 'none';
+  if (hasUpdatedInfo) autoRefresh(0);
+  toggleScroll();
 };

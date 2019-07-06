@@ -52,6 +52,17 @@ const autoRefresh = (time) => {
   }, time);
 };
 
+const errorMessage = (err) => {
+  let msg = '';
+  if (err.message.includes('NetworkError')) {
+    msg = `Network Error!<br/>Ensure you are connected to the Internet.<br/>
+      Then refresh page.`;
+  } else {
+    msg = err.message;
+  }
+  return msg;
+};
+
 /* ============ MAIN LOGICS ========================= */
 // Toggle Menubar filter bar when the screen is below 800px
 const menuList = document.querySelector('.menu-list');

@@ -21,6 +21,7 @@ const statusFilter = `
     </label>
   </div>
 </div>`;
+
 if (!window.location.href.includes('marketplace')) filterContent += statusFilter;
 
 filterContent += `
@@ -258,4 +259,56 @@ window.addEventListener('resize', () => {
     filterDdBtn.firstChild.classList.remove('hide');
     filterDdBtn.lastChild.classList.add('hide');
   }
+});
+
+/* ============= MANAGE FILTER LOGICS HERE ============= */
+const filterSelectors = document.querySelectorAll('.common-seletor');
+const variables = {
+  min_price: null,
+  max_price: null,
+  manufacturer: null,
+  body_type: null,
+  state: null,
+  status: null,
+};
+
+filterSelectors.forEach((selector) => {
+  const sel = selector;
+  sel.onchange = () => {
+    let url = '';
+    if (currentPage === 'admin') url = `${urlPrefix}/api/v1/car?`;
+    else if (currentPage === 'marketplace') url = `${urlPrefix}/api/v1/car?status=Available`;
+    else if (currentPage === 'my-ads') url = `${urlPrefix}/api/v1/car?owner_id=${user_id}`;
+
+    if (sel.classList.contains('min-price')) {
+      const val = sel.value.replace(/\D/g, '');
+      variables.min_price = isNaN(parseFloat(val)) ? null : parseFloat(val);
+    } else if (sel.classList.contains('max-price')) {
+      const val = sel.value.replace(/\D/g, '');
+      variables.max_price = isNaN(parseFloat(val)) ? null : parseFloat(val);
+    } else if (sel.classList.contains('manufacturer')) {
+      if (sel.checked) {
+        variables.manufacturer = sel.value === 'on' ? null : sel.value;
+      }
+    } else if (sel.classList.contains('body-type')) {
+      if (sel.checked) {
+        variables.body_type = sel.value === 'on' ? null : sel.value;
+      }
+    } else if (sel.classList.contains('state')) {
+      if (sel.checked) {
+        variables.state = sel.value === 'on' ? null : sel.value;
+      }
+    } else if (sel.classList.contains('status')) {
+      if (sel.checked) {
+        variables.status = sel.value === 'on' ? null : sel.value;
+      }
+    }
+    Object.keys(variables).forEach((key) => {
+      if (variables[key] !== null) {
+        url += `&${key}=${variables[key]}`;
+      }
+    });
+    fetchCarAds(url, 'No car AD matches the filter parameter.');
+  };
+  return 0;
 });

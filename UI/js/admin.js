@@ -15,6 +15,11 @@ const token = sessionStorage.getItem('token');
 
 const urlPrefix = 'https://auto-mart-adc.herokuapp.com';
 
+// used for selecting the right url for filtering
+const currentPage = 'admin';
+
+let hasUpdatedInfo = false;
+
 /* ================ Helper funtions ================= */
 const deleteFlag = (params) => {
   const {
@@ -26,6 +31,7 @@ const deleteFlag = (params) => {
   confMsg.innerHTML = `Are you sure you want to delete<br/>flag with ID ${id} placed on<br/><b>${car_name}</b>
   <br/>owned by ${(owner_id === parseInt(user_id, 10) ? 'you' : owner_name)}?`;
   confirmationModal.style.display = 'block';
+  toggleScroll();
 
   confirm.onclick = (e) => {
     e.preventDefault();
@@ -38,17 +44,22 @@ const deleteFlag = (params) => {
     .then((response) => {
       if (response.status === 200) {
         message.innerHTML = response.message;
-        autoRefresh(3000);
+        hasUpdatedInfo = true;
       } else {
         message.innerHTML = response.error;
       }
       confirmationModal.style.display = 'none';
+      notificationModal.style.display = 'block';
+    })
+    .catch((err) => {
+      message.innerHTML = errorMessage(err);
       notificationModal.style.display = 'block';
     });
   };
   decline.onclick = (e) => {
     e.preventDefault();
     confirmationModal.style.display = 'none';
+    toggleScroll();
   };
 };
 
@@ -62,6 +73,7 @@ const markAddressed = (params) => {
   confMsg.innerHTML = `Are you sure you want to mark<br/>flag with ID ${id} placed on<br/><b>${car_name}</b>
   <br/>owned by ${(owner_id === parseInt(user_id, 10) ? 'you' : owner_name)} as Addressed?`;
   confirmationModal.style.display = 'block';
+  toggleScroll();
 
   confirm.onclick = (e) => {
     e.preventDefault();
@@ -74,17 +86,22 @@ const markAddressed = (params) => {
     .then((response) => {
       if (response.status === 200) {
         message.innerHTML = response.message;
-        autoRefresh(3000);
+        hasUpdatedInfo = true;
       } else {
         message.innerHTML = response.error;
       }
       confirmationModal.style.display = 'none';
+      notificationModal.style.display = 'block';
+    })
+    .catch((err) => {
+      message.innerHTML = errorMessage(err);
       notificationModal.style.display = 'block';
     });
   };
   decline.onclick = (e) => {
     e.preventDefault();
     confirmationModal.style.display = 'none';
+    toggleScroll();
   };
 };
 
@@ -158,7 +175,8 @@ const viewFlagList = (carId, carName) => {
     }
   })
   .catch((error) => {
-    message.innerHTML = error;
+    message.innerHTML = errorMessage(error);
+    flagListModal.innerHTML = errorMessage(error);
     notificationModal.style.display = 'block';
     toggleScroll();
   });
@@ -174,6 +192,7 @@ const deleteAd = (params) => {
   confMsg.innerHTML = `Are you sure you want to delete<br/><b>${name}</b>
   <br/>owned by ${(owner_id === parseInt(user_id, 10) ? 'you' : owner_name)}?`;
   confirmationModal.style.display = 'block';
+  toggleScroll();
 
   confirm.onclick = (e) => {
     e.preventDefault();
@@ -186,17 +205,22 @@ const deleteAd = (params) => {
     .then((response) => {
       if (response.status === 200) {
         message.innerHTML = response.message;
-        autoRefresh(3000);
+        hasUpdatedInfo = true;
       } else {
         message.innerHTML = response.error;
       }
       confirmationModal.style.display = 'none';
+      notificationModal.style.display = 'block';
+    })
+    .catch((err) => {
+      message.innerHTML = errorMessage(err);
       notificationModal.style.display = 'block';
     });
   };
   decline.onclick = (e) => {
     e.preventDefault();
     confirmationModal.style.display = 'none';
+    toggleScroll();
   };
 };
 
@@ -288,7 +312,8 @@ const fetchCarAds = (url, msgIfEmpty) => {
     }
   })
   .catch((error) => {
-    message.innerHTML = error;
+    message.innerHTML = errorMessage(error);
+    carList.innerHTML = errorMessage(error);
     notificationModal.style.display = 'block';
     toggleScroll();
   });
@@ -322,53 +347,6 @@ closeFlagList.onclick = () => {
 closeNotifation.onclick = (e) => {
   e.preventDefault();
   notificationModal.style.display = 'none';
+  if (hasUpdatedInfo) autoRefresh(0);
+  toggleScroll();
 };
-
-/* ============= MANAGE FILTER LOGICS HERE ============= */
-const filterSelectors = document.querySelectorAll('.common-seletor');
-const variables = {
-  min_price: null,
-  max_price: null,
-  manufacturer: null,
-  body_type: null,
-  state: null,
-  status: null,
-};
-
-filterSelectors.forEach((selector) => {
-  const sel = selector;
-  sel.onchange = () => {
-    let url = `${urlPrefix}/api/v1/car?`;
-
-    if (sel.classList.contains('min-price')) {
-      const val = sel.value.replace(/\D/g, '');
-      variables.min_price = isNaN(parseFloat(val)) ? null : parseFloat(val);
-    } else if (sel.classList.contains('max-price')) {
-      const val = sel.value.replace(/\D/g, '');
-      variables.max_price = isNaN(parseFloat(val)) ? null : parseFloat(val);
-    } else if (sel.classList.contains('manufacturer')) {
-      if (sel.checked) {
-        variables.manufacturer = sel.value === 'on' ? null : sel.value;
-      }
-    } else if (sel.classList.contains('body-type')) {
-      if (sel.checked) {
-        variables.body_type = sel.value === 'on' ? null : sel.value;
-      }
-    } else if (sel.classList.contains('state')) {
-      if (sel.checked) {
-        variables.state = sel.value === 'on' ? null : sel.value;
-      }
-    } else if (sel.classList.contains('status')) {
-      if (sel.checked) {
-        variables.status = sel.value === 'on' ? null : sel.value;
-      }
-    }
-    Object.keys(variables).forEach((key) => {
-      if (variables[key] !== null) {
-        url += `&${key}=${variables[key]}`;
-      }
-    });
-    fetchCarAds(url, 'No car AD matches the filter parameter.');
-  };
-  return 0;
-});

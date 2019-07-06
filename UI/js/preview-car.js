@@ -58,5 +58,8 @@ const previewCar = (carId, btnGrp) => {
       notificationModal.style.display = 'block';
       toggleScroll();
     }
+  })
+  .catch((err) => {
+    carPreviewModal.innerHTML = `<br/><br/>${errorMessage(err)}`;
   });
 };
