@@ -124,7 +124,7 @@ filterContent += `
       Lamborghini
     </label>
     <label>
-      <input type="radio" name="manufacturer" class="manufacturer common-seletor" value="Land-Rover">
+      <input type="radio" name="manufacturer" class="manufacturer common-seletor" value="Land Rover">
       Land Rover
     </label>
     <label>
@@ -156,7 +156,7 @@ filterContent += `
       Renault
     </label>
     <label>
-      <input type="radio" name="manufacturer" class="manufacturer common-seletor" value="Rolls-Royce">
+      <input type="radio" name="manufacturer" class="manufacturer common-seletor" value="Rolls Royce">
       Rolls Royce
     </label>
     <label>
@@ -185,40 +185,28 @@ filterContent += `
       All
     </label>
     <label>
-      <input type="radio" name="body-type" class="body-type common-seletor" value="Micro">
-      Micro
-    </label>
-    <label>
       <input type="radio" name="body-type" class="body-type common-seletor" value="Convertible">
       Convertible
-    </label>
-    <label>
-      <input type="radio" name="body-type" class="body-type common-seletor" value="Large Van">
-      Large Van
-    </label>
-    <label>
-      <input type="radio" name="body-type" class="body-type common-seletor" value="Large SUV">
-      Large SUV
-    </label>
-    <label>
-      <input type="radio" name="body-type" class="body-type common-seletor" value="Small Van">
-      Small Van
     </label>
     <label>
       <input type="radio" name="body-type" class="body-type common-seletor" value="Coupe">
       Coupe
     </label>
     <label>
-      <input type="radio" name="body-type" class="body-type common-seletor" value="Sudan">
-      Sudan
+      <input type="radio" name="body-type" class="body-type common-seletor" value="Hatch">
+      Hatch
     </label>
     <label>
-      <input type="radio" name="body-type" class="body-type common-seletor" value="Truck">
-      Truck
+      <input type="radio" name="body-type" class="body-type common-seletor" value="Large SUV">
+      Large SUV
     </label>
     <label>
-      <input type="radio" name="body-type" class="body-type common-seletor" value="Truck Cab">
-      Truck Cab
+      <input type="radio" name="body-type" class="body-type common-seletor" value="Large Van">
+      Large Van
+    </label>
+    <label>
+      <input type="radio" name="body-type" class="body-type common-seletor" value="Micro">
+      Micro
     </label>
     <label>
       <input type="radio" name="body-type" class="body-type common-seletor" value="MPV">
@@ -229,8 +217,24 @@ filterContent += `
       Pick Up
     </label>
     <label>
-      <input type="radio" name="body-type" class="body-type common-seletor" value="Hatch">
-      Hatch
+      <input type="radio" name="body-type" class="body-type common-seletor" value="Small SUV">
+      Small SUV
+    </label>
+    <label>
+      <input type="radio" name="body-type" class="body-type common-seletor" value="Small Van">
+      Small Van
+    </label>
+    <label>
+      <input type="radio" name="body-type" class="body-type common-seletor" value="Sudan">
+      Sudan
+    </label>
+    <label>
+      <input type="radio" name="body-type" class="body-type common-seletor" value="Truck Cab">
+      Truck Cab
+    </label>
+    <label>
+      <input type="radio" name="body-type" class="body-type common-seletor" value="Truck Jeep">
+      Truck Jeep
     </label>
   </div>
 </div>`;
@@ -254,4 +258,53 @@ window.addEventListener('resize', () => {
     filterDdBtn.firstChild.classList.remove('hide');
     filterDdBtn.lastChild.classList.add('hide');
   }
+});
+
+/* ============= MANAGE FILTER LOGICS HERE ============= */
+const filterSelectors = document.querySelectorAll('.common-seletor');
+const variables = {
+  min_price: null,
+  max_price: null,
+  manufacturer: null,
+  body_type: null,
+  state: null,
+  status: null,
+};
+
+filterSelectors.forEach((selector) => {
+  const sel = selector;
+  sel.onchange = () => {
+    let url = `${urlPrefix}/api/v1/car?`;
+
+    if (sel.classList.contains('min-price')) {
+      const val = sel.value.replace(/\D/g, '');
+      variables.min_price = isNaN(parseFloat(val)) ? null : parseFloat(val);
+    } else if (sel.classList.contains('max-price')) {
+      const val = sel.value.replace(/\D/g, '');
+      variables.max_price = isNaN(parseFloat(val)) ? null : parseFloat(val);
+    } else if (sel.classList.contains('manufacturer')) {
+      if (sel.checked) {
+        variables.manufacturer = sel.value === 'on' ? null : sel.value;
+      }
+    } else if (sel.classList.contains('body-type')) {
+      if (sel.checked) {
+        variables.body_type = sel.value === 'on' ? null : sel.value;
+      }
+    } else if (sel.classList.contains('state')) {
+      if (sel.checked) {
+        variables.state = sel.value === 'on' ? null : sel.value;
+      }
+    } else if (sel.classList.contains('status')) {
+      if (sel.checked) {
+        variables.status = sel.value === 'on' ? null : sel.value;
+      }
+    }
+    Object.keys(variables).forEach((key) => {
+      if (variables[key] !== null) {
+        url += `&${key}=${variables[key]}`;
+      }
+    });
+    fetchCarAds(url, 'No car AD matches the filter parameter.');
+  };
+  return 0;
 });

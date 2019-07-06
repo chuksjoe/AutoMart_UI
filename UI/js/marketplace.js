@@ -9,6 +9,7 @@ const closeCarPreview = document.getElementById('close-car-preview');
 const closePurModal = document.getElementById('close-purchase-modal');
 const closeFraudModal = document.getElementById('close-fraud-modal');
 const closeNotifation = document.querySelector('.close-notification');
+const message = document.querySelector('#notification-overlay .message');
 
 const userName = document.querySelector('.user-name');
 const user_id = sessionStorage.getItem('user_id');
@@ -40,6 +41,7 @@ const displayNavBar = () => {
   }
 };
 
+// open purchase order modal
 const openPurchaseModal = (params) => {
   const {
     id, name, price, body_type,
@@ -56,7 +58,6 @@ const openPurchaseModal = (params) => {
 
   placeOrderBtn.onclick = (e) => {
     e.preventDefault();
-    const message = document.querySelector('#notification-overlay .message');
     let price_offered = document.querySelector('.purchase-order-form .price').value;
     price_offered = price_offered.replace(/\D/g, '');
     if (price_offered === '') {
@@ -66,13 +67,12 @@ const openPurchaseModal = (params) => {
     }
 
     const data = { car_id: id, price_offered };
-    const init = {
+    const options = {
       method: 'POST',
       body: JSON.stringify(data),
       headers: { 'Content-Type': 'application/json', authorization: `Bearer ${token}` },
-      mode: 'cors',
     };
-    fetch(`${urlPrefix}/api/v1/order`, init)
+    fetch(`${urlPrefix}/api/v1/order`, options)
     .then(res => res.json())
     .then((response) => {
       const res = response;
@@ -80,11 +80,8 @@ const openPurchaseModal = (params) => {
         message.innerHTML = `You have successfully placed an order for <b>${res.data.car_name}</b>.<br/><br/>
         Actual Price: &#8358 ${parseInt(res.data.price, 10).toLocaleString('en-US')}<br/>
         Price Offered: &#8358 ${parseInt(res.data.price_offered, 10).toLocaleString('en-US')}`;
-      } else if (res.status === 400) {
-        message.innerHTML = res.error;
       } else {
-        message.innerHTML = `Please ensure you are logged-in before placing an order.<br/>
-        If you don't have an account on AutoMart,<br/><a href='/api/v1/signup'>Click here to Sign-up.</a>`;
+        message.innerHTML = res.error;
       }
       purchaseModal.style.display = 'none';
       notificationModal.style.display = 'block';
@@ -93,98 +90,55 @@ const openPurchaseModal = (params) => {
   };
 };
 
+// open fraudulent flagging modal
 const openFraudModal = (params) => {
+  const {
+    id, name, price, body_type,
+  } = params;
+  const flagAdBtn = document.getElementById('flag-ad');
+
+  document.querySelector('#fraudulent-flag-overlay .c-details-mv').innerHTML = name;
+  document.querySelector('#fraudulent-flag-overlay .c-b-type').innerHTML = `(${body_type})`;
+  document.querySelector('#fraudulent-flag-overlay .c-price')
+  .innerHTML = `&#8358 ${parseInt(price, 10).toLocaleString('en-US')}`;
+
   fraudModal.style.display = 'block';
-};
 
-// used to get details of a car from the database
-const getCarDetils = (carId) => {
-  const carPreviewModal = document.querySelector('#car-preview-overlay .modal-body');
-  const carDetails = document.querySelector('#car-preview-overlay .car-view-detail');
-  const mainDesc = document.querySelector('#car-preview-overlay .car-view-main-desc');
-  const otherInfo = document.querySelector('#car-preview-overlay .other-info');
-
-  carPreviewModal.innerHTML = '<div id="loading"><img src="../images/loader.gif" /></div>';
-  fetch(`${urlPrefix}/api/v1/car/${carId}`)
-  .then(res => res.json())
-  .then((response) => {
-    if (response.status === 200) {
-      const car = response.data;
-      const {
-        id, name, img_url, manufacturer, model, year, state, owner_id, owner_name, price,
-        body_type, fuel_type, mileage, color, transmission_type, fuel_cap, created_on, doors,
-        description, ac, arm_rest, air_bag, dvd_player, fm_radio, tinted_windows,
-      } = car;
-      document.querySelector('#car-preview-overlay .modal-header').innerHTML = name;
-      document.querySelector('#car-preview-overlay .added-date').innerHTML = `Added on: ${configDate(created_on)}`;
-
-      carDetails.innerHTML = `<div class="car-view-image"><img src="${img_url}" alt="${name}"></div>`;
-      mainDesc.innerHTML = `
-      <p class="c-price">Price: &#8358 ${parseInt(price, 10).toLocaleString('en-US')}</p>
-      <div class="prop-list flex-container">
-        <p class="prop"><b>Make:</b><br>${manufacturer}</p>
-        <p class="prop"><b>Model:</b><br>${model}</p>
-        <p class="prop"><b>State:</b><br>${state}</p>
-        <p class="prop"><b>Body Type:</b><br>${body_type}</p>
-        <p class="prop"><b>Color:</b><br>${color}</p>
-        <p class="prop"><b>Year:</b><br>${year}</p>
-        <p class="prop"><b>Fuel Type:</b><br>${fuel_type}</p>
-        <p class="prop"><b>Fuel Capacity:</b><br>${fuel_cap}L</p>
-        <p class="prop"><b>Mileage:</b><br>${mileage.toLocaleString('en-US')}km</p>
-        <p class="prop"><b>Transmission:</b><br>${transmission_type}</p>
-        <p class="prop"><b>Posted By:</b><br>${(owner_id === parseInt(user_id, 10) ? 'Me' : owner_name)}</p>
-        <p class="prop"><b>Doors:</b><br>${doors} doors</p>
-      </div>`;
-      otherInfo.innerHTML = `
-      <div class="description">
-        <h3>Description</h3><hr>
-        <p>${description}</p>
-      </div>
-      <div class="features">
-        <h3>Features</h3><hr>
-        <p>${ac ? '<label>Air Condition</label>' : ''}${arm_rest ? '<label>Arm Rest</label>' : ''}
-        ${air_bag ? '<label>Air Bag</label>' : ''}${dvd_player ? '<label>DVD Player</label>' : ''}
-        ${fm_radio ? '<label>FM Radio</label>' : ''}${tinted_windows ? '<label>Tinted Glasses</label>' : ''}</p>
-      </div>`;
-      const btnGrp = document.createElement('div');
-      const orderBtn = document.createElement('button');
-      const flagBtn = document.createElement('button');
-      btnGrp.setAttribute('class', 'btn-group flex-container');
-      orderBtn.setAttribute('class', 'half-btn btn');
-      orderBtn.onclick = () => {
-        openPurchaseModal({
-          id, name, price, body_type,
-        });
-      };
-      orderBtn.innerHTML = 'Place Order';
-      flagBtn.setAttribute('class', 'half-btn btn');
-      flagBtn.onclick = () => {
-        openFraudModal({
-          id, name, price, body_type,
-        });
-      };
-      flagBtn.innerHTML = 'Flag Fradulent AD';
-      if (owner_id === parseInt(user_id, 10)) {
-        orderBtn.setAttribute('disabled', 'disabled');
-        flagBtn.setAttribute('disabled', 'disabled');
-      }
-      btnGrp.appendChild(orderBtn);
-      btnGrp.appendChild(flagBtn);
-
-      mainDesc.appendChild(btnGrp);
-      carPreviewModal.innerHTML = null;
-      carDetails.appendChild(mainDesc);
-      carDetails.appendChild(otherInfo);
-      carPreviewModal.appendChild(carDetails);
-    } else {
-      const message = document.querySelector('#notification-overlay .message');
-      message.innerHTML = response.error;
+  flagAdBtn.onclick = (e) => {
+    e.preventDefault();
+    const reason = document.querySelector('.flagging-form .reason').value;
+    const description = document.querySelector('.flagging-form .description').value;
+    if (reason.length < 3 || description.length <= 1) {
+      message.innerHTML = 'Ensure you select a reason for your flag, and a description of the flag is given.';
       notificationModal.style.display = 'block';
-      toggleScroll();
+      return 0;
     }
-  });
+
+    const data = { car_id: id, reason, description };
+    const options = {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: { 'Content-Type': 'application/json', authorization: `Bearer ${token}` },
+    };
+    fetch(`${urlPrefix}/api/v1/flag`, options)
+    .then(res => res.json())
+    .then((response) => {
+      const res = response;
+      if (res.status === 201) {
+        message.innerHTML = `${res.message}<br/>Car Ad Owner: ${res.data.owner_name}`;
+        document.querySelector('.flagging-form .reason').value = null;
+        document.querySelector('.flagging-form .description').value = null;
+      } else {
+        message.innerHTML = res.error;
+      }
+      purchaseModal.style.display = 'none';
+      notificationModal.style.display = 'block';
+    });
+    return 0;
+  };
 };
 
+// get all the cars
 const fetchCarAds = (url, msgIfEmpty) => {
   const carList = document.querySelector('.car-list');
   carList.innerHTML = '<div id="loading"><img src="../images/loader.gif" /></div>';
@@ -206,15 +160,68 @@ const fetchCarAds = (url, msgIfEmpty) => {
         carCard.setAttribute('data-id', id);
         carImg.classList.add('car-image');
         carImg.onclick = () => {
-          getCarDetils(id);
+          const btnGrp = document.createElement('div');
+          const orderBtnOnPrev = document.createElement('button');
+          const flagBtn = document.createElement('button');
+          btnGrp.setAttribute('class', 'btn-group flex-container');
+          orderBtnOnPrev.setAttribute('class', 'half-btn btn');
+          orderBtnOnPrev.onclick = () => {
+            if (is_loggedin) {
+              openPurchaseModal({
+                id, name, price, body_type,
+              });
+            } else {
+              message.innerHTML = `Please ensure you are logged-in before placing an order.<br/>
+              If you don't have an account on AutoMart,<br/><a href='./signup.html'>Click here to Sign-up.</a>
+              <br/>else,<br/><a href='./signin.html'>Click here to Sign-in.</a>`;
+              notificationModal.style.display = 'block';
+              toggleScroll();
+            }
+          };
+          orderBtnOnPrev.innerHTML = 'Place Order';
+          flagBtn.setAttribute('class', 'half-btn btn');
+          flagBtn.onclick = () => {
+            if (is_loggedin) {
+              openFraudModal({
+                id, name, price, body_type,
+              });
+            } else {
+              message.innerHTML = `Please ensure you are logged-in before flagging an AD.<br/>
+              If you don't have an account on AutoMart,<br/><a href='./signup.html'>Click here to Sign-up.</a>
+              <br/>else,<br/><a href='./signin.html'>Click here to Sign-in.</a>`;
+              notificationModal.style.display = 'block';
+              toggleScroll();
+            }
+          };
+          flagBtn.innerHTML = 'Flag Fradulent AD';
+          if (owner_id === parseInt(user_id, 10)) {
+            orderBtnOnPrev.setAttribute('disabled', 'disabled');
+            flagBtn.setAttribute('disabled', 'disabled');
+          }
+          btnGrp.appendChild(orderBtnOnPrev);
+          btnGrp.appendChild(flagBtn);
+
+          // call the previewCar function defined in preview-car.js
+          previewCar(id, btnGrp);
+
           carPreview.style.display = 'block';
           toggleScroll();
         };
         carInfo.classList.add('car-info');
         orderBtn.classList.add('order', 'full-btn', 'btn');
-        orderBtn.onclick = () => openPurchaseModal({
-          id, name, price, body_type,
-        });
+        orderBtn.onclick = () => {
+          if (is_loggedin) {
+            openPurchaseModal({
+              id, name, price, body_type,
+            });
+          } else {
+            message.innerHTML = `Please ensure you are logged-in before placing an order.<br/>
+            If you don't have an account on AutoMart,<br/><a href='./signup.html'>Click here to Sign-up.</a>
+            <br/>else,<br/><a href='./signin.html'>Click here to Sign-in.</a>`;
+            notificationModal.style.display = 'block';
+            toggleScroll();
+          }
+        };
         orderBtn.innerHTML = 'Place Order';
         if (owner_id === parseInt(user_id, 10)) {
           orderBtn.setAttribute('disabled', 'disabled');
@@ -235,7 +242,6 @@ const fetchCarAds = (url, msgIfEmpty) => {
     }
   })
   .catch((error) => {
-    const message = document.querySelector('#notification-overlay .message');
     message.innerHTML = error;
     notificationModal.style.display = 'block';
     toggleScroll();
@@ -272,6 +278,8 @@ closePurModal.onclick = (e) => {
 closeFraudModal.onclick = (e) => {
   e.preventDefault();
   fraudModal.style.display = 'none';
+  document.querySelector('.flagging-form .reason').value = null;
+  document.querySelector('.flagging-form .description').value = null;
   toggleScroll();
 };
 
@@ -280,47 +288,3 @@ closeNotifation.onclick = (e) => {
   notificationModal.style.display = 'none';
   toggleScroll();
 };
-
-/* ============= MANAGE FILTER LOGICS HERE ============= */
-const filterSelectors = document.querySelectorAll('.common-seletor');
-const variables = {
-  min_price: null,
-  max_price: null,
-  manufacturer: null,
-  body_type: null,
-  state: null,
-};
-
-filterSelectors.forEach((selector) => {
-  const sel = selector;
-  sel.onchange = () => {
-    let url = `${urlPrefix}/api/v1/car?status=Available`;
-
-    if (sel.classList.contains('min-price')) {
-      const val = sel.value.replace(/\D/g, '');
-      variables.min_price = isNaN(parseFloat(val)) ? null : parseFloat(val);
-    } else if (sel.classList.contains('max-price')) {
-      const val = sel.value.replace(/\D/g, '');
-      variables.max_price = isNaN(parseFloat(val)) ? null : parseFloat(val);
-    } else if (sel.classList.contains('manufacturer')) {
-      if (sel.checked) {
-        variables.manufacturer = sel.value === 'on' ? null : sel.value;
-      }
-    } else if (sel.classList.contains('body-type')) {
-      if (sel.checked) {
-        variables.body_type = sel.value === 'on' ? null : sel.value;
-      }
-    } else if (sel.classList.contains('state')) {
-      if (sel.checked) {
-        variables.state = sel.value === 'on' ? null : sel.value;
-      }
-    }
-    Object.keys(variables).forEach((key) => {
-      if (variables[key] !== null) {
-        url += `&${key}=${variables[key]}`;
-      }
-    });
-    fetchCarAds(url, 'No car AD matches the filter parameter.');
-  };
-  return 0;
-});
