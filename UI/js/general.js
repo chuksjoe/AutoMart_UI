@@ -57,6 +57,8 @@ const errorMessage = (err) => {
   if (err.message.includes('NetworkError')) {
     msg = `Network Error!<br/>Ensure you are connected to the Internet.<br/>
       Then refresh page.`;
+  } else {
+    msg = err.message;
   }
   return msg;
 };
