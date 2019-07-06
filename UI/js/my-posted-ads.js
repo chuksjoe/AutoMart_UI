@@ -25,11 +25,11 @@ const deleteAd = (params) => {
 
   confirm.onclick = (e) => {
     e.preventDefault();
-    const init = {
+    const options = {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json', authorization: `Bearer ${token}` },
     };
-    fetch(`${urlPrefix}/api/v1/car/${id}`, init)
+    fetch(`${urlPrefix}/api/v1/car/${id}`, options)
     .then(res => res.json())
     .then((response) => {
       if (response.status === 200) {
@@ -72,12 +72,12 @@ const openUpdateModal = (params) => {
       return 0;
     }
 
-    const init = {
+    const options = {
       method: 'PATCH',
       body: JSON.stringify({ new_price }),
       headers: { 'Content-Type': 'application/json', authorization: `Bearer ${token}` },
     };
-    fetch(`${urlPrefix}/api/v1/car/${id}/price`, init)
+    fetch(`${urlPrefix}/api/v1/car/${id}/price`, options)
     .then(res => res.json())
     .then((response) => {
       const res = response;
@@ -106,11 +106,11 @@ const updateAdStatus = (params) => {
 
   confirm.onclick = (e) => {
     e.preventDefault();
-    const init = {
+    const options = {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', authorization: `Bearer ${token}` },
     };
-    fetch(`${urlPrefix}/api/v1/car/${id}/status`, init)
+    fetch(`${urlPrefix}/api/v1/car/${id}/status`, options)
     .then(res => res.json())
     .then((response) => {
       const res = response;

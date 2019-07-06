@@ -140,12 +140,12 @@ postAdBtn.onclick = (e) => {
 		formData.set('dvd_player', dvd_player.checked.toString());
 		formData.set('tinted_windows', tinted_windows.checked.toString());
 		formData.set('air_bag', air_bag.checked.toString());
-		const init = {
+		const options = {
 			body: formData,
 			method: 'POST',
 			headers: { authorization: `Bearer ${token}` },
 		};
-		fetch(`${urlPrefix}/api/v1/car`, init)
+		fetch(`${urlPrefix}/api/v1/car`, options)
 		.then(res => res.json())
 		.then((response) => {
 			const res = response;

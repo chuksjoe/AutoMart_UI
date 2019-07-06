@@ -29,11 +29,11 @@ const deleteFlag = (params) => {
 
   confirm.onclick = (e) => {
     e.preventDefault();
-    const init = {
+    const options = {
       method: 'DELETE',
       headers: { authorization: `Bearer ${token}` },
     };
-    fetch(`${urlPrefix}/api/v1/flag/${id}`, init)
+    fetch(`${urlPrefix}/api/v1/flag/${id}`, options)
     .then(res => res.json())
     .then((response) => {
       if (response.status === 200) {
@@ -65,11 +65,11 @@ const markAddressed = (params) => {
 
   confirm.onclick = (e) => {
     e.preventDefault();
-    const init = {
+    const options = {
       method: 'PATCH',
       headers: { authorization: `Bearer ${token}` },
     };
-    fetch(`${urlPrefix}/api/v1/flag/${id}/status`, init)
+    fetch(`${urlPrefix}/api/v1/flag/${id}/status`, options)
     .then(res => res.json())
     .then((response) => {
       if (response.status === 200) {
@@ -96,11 +96,11 @@ const viewFlagList = (carId, carName) => {
   flagList.style.display = 'block';
   toggleScroll();
 
-  const init = {
+  const options = {
     method: 'GET',
     headers: { authorization: `Bearer ${token}` },
   };
-  fetch(`${urlPrefix}/api/v1/flag/${carId}`, init)
+  fetch(`${urlPrefix}/api/v1/flag/${carId}`, options)
   .then(res => res.json())
   .then((response) => {
     const res = response;
@@ -177,11 +177,11 @@ const deleteAd = (params) => {
 
   confirm.onclick = (e) => {
     e.preventDefault();
-    const init = {
+    const options = {
       method: 'DELETE',
       headers: { authorization: `Bearer ${token}` },
     };
-    fetch(`${urlPrefix}/api/v1/car/${id}`, init)
+    fetch(`${urlPrefix}/api/v1/car/${id}`, options)
     .then(res => res.json())
     .then((response) => {
       if (response.status === 200) {

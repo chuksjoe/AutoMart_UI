@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width initial-scale=1.0">
+		<meta name="description" content="Auto Mart is an online marketplace for automobiles of diverse makes, model or body type. With Auto Mart, users can sell their cars or buy from trusted dealerships or private sellers.">
+		<title>My Profile - Auto Mart</title>
+
+		<link href="https://fonts.googleapis.com/css?family=Oxygen" rel="stylesheet">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css">
+		
+		<link href="../css/general.css" rel="stylesheet">
+		<link href="../css/form-pages.css" rel="stylesheet">
+		<link href="../css/my-profile.css" rel="stylesheet">
+
+		<link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	</head>
+	<body>
+		<div class="container">
+			<header>
+				<nav>
+					<a href="./index.html"><img src="../images/automart-full-logo-250px.png" width="150"></a>
+					<div class="menu-bar">
+						<span class="menu-btn"><i class="fa fa-bars"></i><i class="fa fa-times hide"></i></span>
+						<ul class="menu-list">
+							<li><a href="./post-new-ad.html">Post New AD</a></li>
+							<li><a href="./marketplace.html">Marketplace</a></li>
+							<li><a href="./my-posted-ads.html">My ADs</a></li>
+							<li class="dropdown"><a href="javascript:void(0)">History <i class="fa fa-caret-down"></i></a>
+								<ul class="dropdown-list">
+									<li><a href="./sales-history.html">Sales History</a></li>
+									<li><a href="./purchase-history.html">Purchase History</a></li>
+								</ul>
+							</li>
+							<li class="current avater dropdown">
+								<span class="user-info">
+									<span class="user-avater fas fa-user-circle"></span> <i class="fa fa-caret-down"></i>
+								</span>
+								<ul class="dropdown-list">
+									<li class="signin-as"><p>You are signed in as:<br><span class="user-name"></span></p></li>
+									<li  class="here"><a href="./my-profile.html">Your Profile</a></li>
+									<li><a href="javascript:void(0)" class="logout">Logout</a></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</nav>
+			</header>
+
+			<div class="content">
+				<div id="loading"><img src="../images/loader.gif" /></div>
+				<main class="main-100 hide">
+					<h2 class="full-name">Chuksjoe Orjiakor</h2>
+					<div class="user-photo">
+						<img src="../images/sell-car.png">
+					</div>
+					<div class="user-full-info">
+						<div class="non-editable-info">
+							<!-- non editable user info goes here -->
+						</div>
+						<div class="password-info">
+							<h3>Your Password</h3>
+							<div class="pass-preview">
+								<p>
+									<span>Current Password: ************</span>
+									<label class="btn change-pass-btn">Change Password</label>
+								</p>
+							</div>
+							<div class="pass-edit hide">
+								<div class="input-group flex-container">
+									<div class = "input-field single">
+										<label for="password0">Current Password:</label>
+										<input type="password" id="password0" name="password0"/>
+									</div>
+									<div class = "input-field">
+										<label for="password1">New Password:</label>
+										<input type="password" id="password1" name="password1"/>
+									</div>
+									<div class = "input-field">
+										<label for="password2">Verify Password:</label>
+										<input type="password" id="password2" name="password2"/>
+									</div>
+								</div>
+								<div class="hide error-div-pass"></div>
+								<div class="input-group flex-container">
+									<button class="half-btn btn save-pass">Save</button>
+									<button class="half-btn btn cancel-pass">Cancel</button>
+								</div>
+							</div>
+						</div>
+						<div class="contact-info">
+							<h3>Contact Info:</h3>
+							<div class="input-group flex-container">
+								<div class = "input-field">
+									<label for="street">Street:</label>
+									<label class="contact street">15 Aborishade road Lawanson</label>
+									<input type="text" id="street" name="street" class="contact-input"/>
+								</div>
+								<div class = "input-field">
+									<label for="city">City:</label>
+									<label class="contact city">Surulere</label>
+									<input type="text" id="city" name="city" class="contact-input"/>
+								</div>
+							</div>
+							<div class="input-group flex-container">
+								<div class = "input-field">
+									<label for="state">State:</label>
+									<label class="contact state">Lagos</label>
+									<input type="text" id="state" name="state" class="contact-input"/>
+								</div>
+								<div class = "input-field">
+									<label for="country">Country:</label>
+									<label class="contact country">Nigeria</label>
+									<input type="text" id="country" name="country" class="contact-input"/>
+								</div>
+							</div>
+							<div class="input-group flex-container">
+								<div class = "input-field">
+									<label for="phone">Telephone Number:</label>
+									<label class="contact phone">08099448839</label>
+									<input type="text" id="phone" name="phone" class="contact-input"/>
+								</div>
+								<div class = "input-field">
+									<label for="zip-code">Zip-code:</label>
+									<label class="contact zip-code">453-443</label>
+									<input type="text" id="zip-code" name="zip-code" class="contact-input"/>
+								</div>
+							</div>
+							<div class="hide error-div-contact"></div>
+							<div class="input-group flex-container">
+								<label class="btn edit-contact-btn">Edit Contact Info</label>
+								<button class="half-btn btn save-contact contact-input">Save</button>
+								<button class="half-btn btn cancel-contact contact-input">Cancel</button>
+							</div>
+						</div>
+					</div>
+				</main>
+			</div>
+			
+			<footer>
+				<div class="inner-div">
+					<p>&#169 Auto-Mart 2019</p>
+					<div class="footer-right">
+						<p>ADC Project by</p>
+						<ul>
+							<a href="https://twitter.com/Chuksjoe" target="_blank"><li><i class="fab fa-twitter" aria-hidden="true"></i></li></a>
+							<a href="https://www.linkedin.com/in/chukwunonso-orjiakor" target="_blank"><li><i class="fab fa-linkedin-in" aria-hidden="true"></i></li></a>
+							<a href="https://github.com/chuksjoe" target="_blank"><li><i class="fab fa-github" title="chuksjoe's DEV Profile"></i></li></a>
+							<a href="https://codepen.io/chuksjoe" target="_blank"><li><i class="fab fa-codepen" title="chuksjoe's DEV Profile"></i></li></a>
+						</ul>
+					</div>
+				</div>
+			</footer>
+		</div>
+
+<!-- Modal view for All Notifications -->
+		<div id="notification-overlay" class="overlay">
+			<div class="modal-view sm-m-v">
+				<h2 class="modal-header">Notification</h2>
+				<div class="modal-body">
+					<div class="message"></div>
+					<button class="full-btn btn close-notification">Close</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal view for All Confirmation -->
+		<div id="confirmation-overlay" class="overlay">
+			<div class="modal-view sm-m-v">
+				<h2 class="modal-header">Confirmation</h2>
+				<div class="modal-body">
+					<div class="message"></div>
+					<button class="half-btn btn yes">Yes</button>
+					<button class="half-btn btn no">No</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- scripts -->
+		<script src="../js/general.js"></script>
+		<script src="../js/my-profile.js"></script>
+	</body>
+</html>

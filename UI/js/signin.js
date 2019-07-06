@@ -45,13 +45,13 @@ signinBtn.onclick = (e) => {
 			email: email.value,
 			password: password.value,
 		};
-		const init = {
+		const options = {
 			body: JSON.stringify(data),
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 		};
 
-		fetch(`${urlPrefix}/api/v1/auth/signin`, init)
+		fetch(`${urlPrefix}/api/v1/auth/signin`, options)
 		.then(res => res.json())
 		.then((response) => {
 			const res = response;

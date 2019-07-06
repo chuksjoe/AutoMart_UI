@@ -84,12 +84,12 @@ signupBtn.onclick = (e) => {
 			phone: phone.value,
 			zip: zip.value,
 		};
-		const init = {
+		const options = {
 			body: JSON.stringify(data),
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 		};
-		fetch(`${urlPrefix}/api/v1/auth/signup`, init)
+		fetch(`${urlPrefix}/api/v1/auth/signup`, options)
 		.then(res => res.json())
 		.then((response) => {
 			const res = response;
