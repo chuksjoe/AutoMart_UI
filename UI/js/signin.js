@@ -57,7 +57,6 @@ signinBtn.onclick = (e) => {
 			const res = response;
 			if (res.status !== 200) {
 				errorDiv.innerHTML = res.error;
-
 				errorDiv.classList.remove('hide');
 				signinBtn.innerHTML = 'Sign In';
 				signinBtn.disabled = null;
@@ -83,7 +82,8 @@ signinBtn.onclick = (e) => {
 			}
 		})
 		.catch((error) => {
-			errorDiv.innerHTML = error;
+			errorDiv.innerHTML = errorMessage(error);
+			errorDiv.classList.remove('hide');
 		});
 	}
 };

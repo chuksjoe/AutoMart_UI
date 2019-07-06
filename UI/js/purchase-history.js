@@ -11,6 +11,8 @@ const token = sessionStorage.getItem('token');
 
 const urlPrefix = 'https://auto-mart-adc.herokuapp.com';
 
+let hasUpdatedInfo = false;
+
 /* ================ Helper funtions ================= */
 const deleteAd = (params) => {
   const {
@@ -24,6 +26,7 @@ const deleteAd = (params) => {
   owned by ${owner_name}?<hr/>Car Price: &#8358 ${parseInt(price, 10).toLocaleString('en-US')}<br/>
   Price you offered: &#8358 ${parseInt(price_offered, 10).toLocaleString('en-US')}`;
   confirmationModal.style.display = 'block';
+  toggleScroll();
 
   confirm.onclick = (e) => {
     e.preventDefault();
@@ -36,17 +39,22 @@ const deleteAd = (params) => {
     .then((response) => {
       if (response.status === 200) {
         message.innerHTML = response.message;
-        autoRefresh(3000);
+        hasUpdatedInfo = true;
       } else {
         message.innerHTML = response.error;
       }
       confirmationModal.style.display = 'none';
+      notificationModal.style.display = 'block';
+    })
+    .catch((err) => {
+      message.innerHTML = errorMessage(err);
       notificationModal.style.display = 'block';
     });
   };
   decline.onclick = (e) => {
     e.preventDefault();
     confirmationModal.style.display = 'none';
+    toggleScroll();
   };
 };
 
@@ -91,11 +99,15 @@ const openUpdateModal = (params) => {
         Actual Price: &#8358 ${parseInt(res.data.price, 10).toLocaleString('en-US')}<br/>
         Old Price Offered: &#8358 ${parseInt(old_price_offered, 10).toLocaleString('en-US')}<br/>
         New Price Offered: &#8358 ${parseInt(new_price_offered, 10).toLocaleString('en-US')}`;
-        autoRefresh(3000);
+        hasUpdatedInfo = true;
       } else {
         message.innerHTML = res.error;
       }
       updatePriceModal.style.display = 'none';
+      notificationModal.style.display = 'block';
+    })
+    .catch((err) => {
+      message.innerHTML = errorMessage(err);
       notificationModal.style.display = 'block';
     });
     return 0;
@@ -184,7 +196,8 @@ window.onload = () => {
     }
   })
   .catch((error) => {
-    message.innerHTML = `${error}<br/>Ensure you are connected to the internet.<br/>Then refresh page.`;
+    message.innerHTML = errorMessage(error);
+    historyList.innerHTML = errorMessage(error);
     notificationModal.style.display = 'block';
     toggleScroll();
   });
@@ -199,5 +212,6 @@ closeUpdateModal.onclick = (e) => {
 closeNotifation.onclick = (e) => {
   e.preventDefault();
   notificationModal.style.display = 'none';
+  if (hasUpdatedInfo) autoRefresh(0);
   toggleScroll();
 };

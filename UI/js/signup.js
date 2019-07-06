@@ -101,12 +101,14 @@ signupBtn.onclick = (e) => {
 				registered on AutoMart with this e-mail address: ${res.data.email}.<br/>
 				click <a href='/api/v1/signin'>here to sign into your account.</a>`;
 			}
-			errorDiv.classList.remove('hide');
 			signupBtn.innerHTML = 'Create Account';
 			signupBtn.disabled = null;
 		})
 		.catch((error) => {
-			errorDiv.innerHTML = error;
+			errorDiv.innerHTML = errorMessage(error);
+		})
+		.finally(() => {
+			errorDiv.classList.remove('hide');
 		});
 	}
 };

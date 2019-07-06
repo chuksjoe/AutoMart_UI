@@ -1,5 +1,6 @@
 const notificationModal = document.getElementById('notification-overlay');
 const closeNotifation = document.querySelector('.close-notification');
+const message = document.querySelector('#notification-overlay .message');
 
 const is_loggedin = sessionStorage.getItem('is_loggedin');
 const is_admin = sessionStorage.getItem('is_admin');
@@ -75,8 +76,8 @@ const fetchUsers = (url, msgIfEmpty) => {
     }
   })
   .catch((error) => {
-    const message = document.querySelector('#notification-overlay .message');
-    message.innerHTML = error;
+    message.innerHTML = errorMessage(error);
+    userList.innerHTML = errorMessage(error);
     notificationModal.style.display = 'block';
     toggleScroll();
   });

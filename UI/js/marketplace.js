@@ -18,6 +18,9 @@ const token = sessionStorage.getItem('token');
 
 const urlPrefix = 'https://auto-mart-adc.herokuapp.com';
 
+// used for selecting the right url for filtering
+const currentPage = 'marketplace';
+
 /* ================ Helper funtions ================= */
 const toggleNavBar = (is_logged, display = 'flex') => {
   if (is_logged) {
@@ -85,6 +88,10 @@ const openPurchaseModal = (params) => {
       }
       purchaseModal.style.display = 'none';
       notificationModal.style.display = 'block';
+    })
+    .catch((err) => {
+      message.innerHTML = errorMessage(err);
+      notificationModal.style.display = 'block';
     });
     return 0;
   };
@@ -103,6 +110,7 @@ const openFraudModal = (params) => {
   .innerHTML = `&#8358 ${parseInt(price, 10).toLocaleString('en-US')}`;
 
   fraudModal.style.display = 'block';
+  toggleScroll();
 
   flagAdBtn.onclick = (e) => {
     e.preventDefault();
@@ -132,6 +140,10 @@ const openFraudModal = (params) => {
         message.innerHTML = res.error;
       }
       purchaseModal.style.display = 'none';
+      notificationModal.style.display = 'block';
+    })
+    .catch((err) => {
+      message.innerHTML = errorMessage(err);
       notificationModal.style.display = 'block';
     });
     return 0;
@@ -242,8 +254,9 @@ const fetchCarAds = (url, msgIfEmpty) => {
     }
   })
   .catch((error) => {
-    message.innerHTML = error;
+    message.innerHTML = errorMessage(error);
     notificationModal.style.display = 'block';
+    carList.innerHTML = errorMessage(error);
     toggleScroll();
   });
 };
@@ -288,51 +301,3 @@ closeNotifation.onclick = (e) => {
   notificationModal.style.display = 'none';
   toggleScroll();
 };
-
-/* ============= MANAGE FILTER LOGICS HERE ============= */
-const filterSelectors = document.querySelectorAll('.common-seletor');
-const variables = {
-  min_price: null,
-  max_price: null,
-  manufacturer: null,
-  body_type: null,
-  state: null,
-};
-
-filterSelectors.forEach((selector) => {
-  const sel = selector;
-  sel.onchange = () => {
-    let url = `${urlPrefix}/api/v1/car?status=Available`;
-
-    if (sel.classList.contains('min-price')) {
-      const val = sel.value.replace(/\D/g, '');
-      variables.min_price = isNaN(parseFloat(val)) ? null : parseFloat(val);
-    } else if (sel.classList.contains('max-price')) {
-      const val = sel.value.replace(/\D/g, '');
-      variables.max_price = isNaN(parseFloat(val)) ? null : parseFloat(val);
-    } else if (sel.classList.contains('manufacturer')) {
-      if (sel.checked) {
-        variables.manufacturer = sel.value === 'on' ? null : sel.value;
-      }
-    } else if (sel.classList.contains('body-type')) {
-      if (sel.checked) {
-        variables.body_type = sel.value === 'on' ? null : sel.value;
-      }
-    } else if (sel.classList.contains('state')) {
-      if (sel.checked) {
-        variables.state = sel.value === 'on' ? null : sel.value;
-      }
-    } else if (sel.classList.contains('status')) {
-      if (sel.checked) {
-        variables.status = sel.value === 'on' ? null : sel.value;
-      }
-    }
-    Object.keys(variables).forEach((key) => {
-      if (variables[key] !== null) {
-        url += `&${key}=${variables[key]}`;
-      }
-    });
-    fetchCarAds(url, 'No car AD matches the filter parameter.');
-  };
-  return 0;
-});

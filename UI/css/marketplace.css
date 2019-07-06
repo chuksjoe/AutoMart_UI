@@ -32,6 +32,13 @@
 		width: 48%;
 	}
 }
+@media only screen and (max-width: 750px) {
+	.visitor-nav,
+	.member-nav {
+		display: none;
+		height: auto;
+	}
+}
 @media only screen and (max-width: 550px) {
 	.car-card {
 		width: 100%;

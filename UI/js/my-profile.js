@@ -98,7 +98,7 @@ savePassBtn.onclick = () => {
 			}
 		})
 		.catch((err) => {
-			errorDiv.innerHTML = err;
+			errorDiv.innerHTML = errorMessage(err);
 			errorDiv.style.display = 'block';
 		})
 		.finally(() => {
@@ -181,7 +181,7 @@ saveContactBtn.onclick = () => {
 			}
 		})
 		.catch((err) => {
-			errorDiv.innerHTML = err;
+			errorDiv.innerHTML = errorMessage(err);
 			errorDiv.style.display = 'block';
 		})
 		.finally(() => {
@@ -258,8 +258,10 @@ window.onload = () => {
     }
   })
   .catch((error) => {
-    message.innerHTML = `${error}<br/>Ensure you are connected to the internet.<br/>Then refresh page.`;
+    message.innerHTML = errorMessage(error);
     notificationModal.style.display = 'block';
+    userInfo.style.display = 'block';
+    userInfo.innerHTML = errorMessage(error);
     toggleScroll();
   })
   .finally(() => {
