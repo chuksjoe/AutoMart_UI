@@ -22,11 +22,11 @@ const reactToOffer = (params) => {
 
   confirm.onclick = (e) => {
     e.preventDefault();
-    const init = {
+    const options = {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', authorization: `Bearer ${token}` },
     };
-    fetch(`${urlPrefix}/api/v1/order/${id}/${action}`, init)
+    fetch(`${urlPrefix}/api/v1/order/${id}/${action}`, options)
     .then(res => res.json())
     .then((response) => {
       if (response.status === 200) {
@@ -63,11 +63,11 @@ window.onload = () => {
   const historyList = document.querySelector('.history-list');
   historyList.innerHTML = '<div id="loading"><img src="../images/loader.gif" /></div>';
 
-  const init = {
+  const options = {
     method: 'GET',
     headers: { authorization: `Bearer ${token}` },
   };
-  fetch(`${urlPrefix}/api/v1/sale`, init)
+  fetch(`${urlPrefix}/api/v1/sale`, options)
   .then(res => res.json())
   .then((response) => {
     const res = response;

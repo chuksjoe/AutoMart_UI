@@ -27,11 +27,11 @@ const deleteAd = (params) => {
 
   confirm.onclick = (e) => {
     e.preventDefault();
-    const init = {
+    const options = {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json', authorization: `Bearer ${token}` },
     };
-    fetch(`${urlPrefix}/api/v1/order/${id}`, init)
+    fetch(`${urlPrefix}/api/v1/order/${id}`, options)
     .then(res => res.json())
     .then((response) => {
       if (response.status === 200) {
@@ -76,12 +76,12 @@ const openUpdateModal = (params) => {
       notificationModal.style.display = 'block';
       return 0;
     }
-    const init = {
+    const options = {
       method: 'PATCH',
       body: JSON.stringify({ new_price }),
       headers: { 'Content-Type': 'application/json', authorization: `Bearer ${token}` },
     };
-    fetch(`${urlPrefix}/api/v1/order/${id}/price`, init)
+    fetch(`${urlPrefix}/api/v1/order/${id}/price`, options)
     .then(res => res.json())
     .then((response) => {
       const res = response;
@@ -117,11 +117,11 @@ window.onload = () => {
   const historyList = document.querySelector('.history-list');
   historyList.innerHTML = '<div id="loading"><img src="../images/loader.gif" /></div>';
 
-  const init = {
+  const options = {
     method: 'GET',
     headers: { authorization: `Bearer ${token}` },
   };
-  fetch(`${urlPrefix}/api/v1/order`, init)
+  fetch(`${urlPrefix}/api/v1/order`, options)
   .then(res => res.json())
   .then((response) => {
     const res = response;

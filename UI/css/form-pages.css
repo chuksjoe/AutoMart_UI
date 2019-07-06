@@ -14,7 +14,10 @@
 	padding: 20px;
 	box-shadow: 0 0 3px #333;
 }
-#error-div {
+#error-div,
+.error-div-pass,
+.error-div-contact {
+	background-color: #a45;
 	color: #fff;
 	text-align: center;
 	padding: 10px 20px;

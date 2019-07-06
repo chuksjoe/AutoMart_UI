@@ -53,6 +53,10 @@ li.current {
   border-bottom: 2px solid #fff;
   padding-top: 2px;
 }
+li.avater {
+  border: none;
+  padding-top: 0;
+}
 .menu-list li a,
 .user-info {
   text-decoration: none;
@@ -77,8 +81,8 @@ li.current ul.dropdown-list a:hover {
 }
 li.current ul.dropdown-list .here {
   background-color: #aaa;
-  padding: 0 10px 10px;
-  margin: 0;
+  padding: 5px 10px 10px;
+  margin: -5px -5px 5px;
 }
 li.current ul.dropdown-list .here a:hover {
   text-decoration: none;

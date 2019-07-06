@@ -67,12 +67,12 @@ const openPurchaseModal = (params) => {
     }
 
     const data = { car_id: id, price_offered };
-    const init = {
+    const options = {
       method: 'POST',
       body: JSON.stringify(data),
       headers: { 'Content-Type': 'application/json', authorization: `Bearer ${token}` },
     };
-    fetch(`${urlPrefix}/api/v1/order`, init)
+    fetch(`${urlPrefix}/api/v1/order`, options)
     .then(res => res.json())
     .then((response) => {
       const res = response;
@@ -115,12 +115,12 @@ const openFraudModal = (params) => {
     }
 
     const data = { car_id: id, reason, description };
-    const init = {
+    const options = {
       method: 'POST',
       body: JSON.stringify(data),
       headers: { 'Content-Type': 'application/json', authorization: `Bearer ${token}` },
     };
-    fetch(`${urlPrefix}/api/v1/flag`, init)
+    fetch(`${urlPrefix}/api/v1/flag`, options)
     .then(res => res.json())
     .then((response) => {
       const res = response;
