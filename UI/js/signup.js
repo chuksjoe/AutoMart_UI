@@ -13,6 +13,10 @@ const signupBtn = document.getElementById('signup-btn');
 const phone = document.getElementById('phone');
 const zip = document.getElementById('zip-code');
 
+const captchaBox = document.querySelector('.captcha-display');
+const captchaInput = document.getElementById('captcha-text');
+let correctCode;
+
 const urlPrefix = 'https://auto-mart-adc.herokuapp.com';
 
 phone.onkeyup = () => {
@@ -64,6 +68,15 @@ signupBtn.onclick = (e) => {
 	e.preventDefault();
 	errorDiv.classList.add('hide');
 	errorDiv.style.backgroundColor = '#a45';
+	if (captchaInput.value !== correctCode) {
+		errorDiv.innerHTML = 'Incorrect Captcha Code. Please try again.';
+		errorDiv.classList.remove('hide');
+		const { canvas, code } = createCaptcha();
+		correctCode = code;
+		captchaBox.innerHTML = '';
+		captchaBox.appendChild(canvas);
+		return 0;
+	}
 	const errors = validateForm();
 	if (errors.length > 0) {
 		handleErrors(errors);
@@ -111,4 +124,11 @@ signupBtn.onclick = (e) => {
 			errorDiv.classList.remove('hide');
 		});
 	}
+	return 0;
+};
+
+window.onload = () => {
+	const { canvas, code } = createCaptcha();
+	correctCode = code;
+  captchaBox.appendChild(canvas);
 };
