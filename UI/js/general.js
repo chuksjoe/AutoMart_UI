@@ -63,6 +63,31 @@ const errorMessage = (err) => {
   return msg;
 };
 
+const createCaptcha = () => {
+  let code = '';
+  const charSet = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()';
+  const captchaLen = 8;
+  const captcha = [];
+  for (let i = 0; i < captchaLen; i += 1) {
+    const index = Math.floor(Math.random() * charSet.length + 1);
+    if (captcha.indexOf(charSet[index]) === -1) {
+      captcha.push(charSet[index]);
+    } else {
+      i -= 1;
+    }
+  }
+  code = captcha.join('');
+  const canvas = document.createElement('canvas');
+  canvas.id = 'captcha';
+  canvas.width = 150;
+  canvas.height = 50;
+  const ctx = canvas.getContext('2d');
+  ctx.font = '28px Georgia';
+  ctx.strokeText(code, 0, 30);
+
+  return { canvas, code };
+};
+
 /* ============ MAIN LOGICS ========================= */
 // Toggle Menubar filter bar when the screen is below 800px
 const menuList = document.querySelector('.menu-list');
