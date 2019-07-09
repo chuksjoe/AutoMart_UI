@@ -53,6 +53,48 @@ const deleteUser = (params) => {
   };
 };
 
+const makeAdmin = (params) => {
+  const { email, first_name, last_name } = params;
+  const confirm = document.querySelector('#confirmation-overlay .yes');
+  const decline = document.querySelector('#confirmation-overlay .no');
+
+  confMsg.innerHTML = `Are you sure you want to upgrade<br/><b>${first_name} ${last_name}</b><br/>
+  to the status of an ADMIN?`;
+  confirmationModal.style.display = 'block';
+  toggleScroll();
+
+  confirm.onclick = (e) => {
+    e.preventDefault();
+    const options = {
+      method: 'PATCH',
+      body: JSON.stringify({ is_admin: true }),
+      headers: { 'Content-Type': 'application/json', authorization: `Bearer ${token}` },
+    };
+    fetch(`${urlPrefix}/api/v1/user/${email}/update_details`, options)
+    .then(res => res.json())
+    .then((response) => {
+      if (response.status === 200) {
+        message.innerHTML = `You have successfully upgraded<br/><b>${first_name} ${last_name}</b><br/>
+        to the status of an <b>ADMIN</b>.`;
+        hasUpdatedInfo = true;
+      } else {
+        message.innerHTML = response.error;
+      }
+      confirmationModal.style.display = 'none';
+      notificationModal.style.display = 'block';
+    })
+    .catch((err) => {
+      message.innerHTML = errorMessage(err);
+      notificationModal.style.display = 'block';
+    });
+  };
+  decline.onclick = (e) => {
+    e.preventDefault();
+    confirmationModal.style.display = 'none';
+    toggleScroll();
+  };
+};
+
 const fetchUsers = (url, msgIfEmpty) => {
   const userList = document.querySelector('.users-list');
   userList.innerHTML = '<div id="loading"><img src="../images/loader.gif" /></div>';
@@ -75,7 +117,7 @@ const fetchUsers = (url, msgIfEmpty) => {
         const userDetails = document.createElement('div');
         const btnGrp = document.createElement('div');
         const msgUser = document.createElement('button');
-        const suspendBtn = document.createElement('button');
+        const makeAdminBtn = document.createElement('button');
         const deleteUserBtn = document.createElement('button');
 
         if (isAdmin) {
@@ -98,17 +140,24 @@ const fetchUsers = (url, msgIfEmpty) => {
 
         msgUser.setAttribute('class', 'send-msg full-btn btn');
         msgUser.innerHTML = 'Message User';
-        suspendBtn.setAttribute('class', 'suspend full-btn btn');
-        suspendBtn.innerHTML = 'Make Admin';
+        makeAdminBtn.setAttribute('class', 'suspend full-btn btn');
+        makeAdminBtn.innerHTML = 'Make Admin';
+        makeAdminBtn.onclick = () => {
+          makeAdmin({ email, first_name, last_name });
+        };
         deleteUserBtn.setAttribute('class', 'delete full-btn btn');
         deleteUserBtn.innerHTML = 'Delete Account';
         deleteUserBtn.onclick = () => {
           deleteUser({ email, first_name, last_name });
         };
+        if (isAdmin) {
+          makeAdminBtn.setAttribute('disabled', 'disabled');
+          deleteUserBtn.setAttribute('disabled', 'disabled');
+        }
 
         btnGrp.setAttribute('class', 'admin-actions p-15');
         btnGrp.appendChild(msgUser);
-        btnGrp.appendChild(suspendBtn);
+        btnGrp.appendChild(makeAdminBtn);
         btnGrp.appendChild(deleteUserBtn);
 
         userItem.appendChild(userDetails);
