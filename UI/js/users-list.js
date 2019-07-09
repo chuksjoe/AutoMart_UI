@@ -1,6 +1,8 @@
 const notificationModal = document.getElementById('notification-overlay');
 const closeNotifation = document.querySelector('.close-notification');
+const confirmationModal = document.getElementById('confirmation-overlay');
 const message = document.querySelector('#notification-overlay .message');
+const confMsg = document.querySelector('#confirmation-overlay .message');
 
 const is_loggedin = sessionStorage.getItem('is_loggedin');
 const is_admin = sessionStorage.getItem('is_admin');
@@ -8,7 +10,48 @@ const token = sessionStorage.getItem('token');
 
 const urlPrefix = 'https://auto-mart-adc.herokuapp.com';
 
+let hasUpdatedInfo = false;
+
 /* ================ Helper funtions ================= */
+const deleteUser = (params) => {
+  const { email, first_name, last_name } = params;
+  const confirm = document.querySelector('#confirmation-overlay .yes');
+  const decline = document.querySelector('#confirmation-overlay .no');
+
+  confMsg.innerHTML = `Are you sure you want to delete<br/><b>${first_name} ${last_name}</b><br/>
+  with all resources attached to him/her from AutoMart database?`;
+  confirmationModal.style.display = 'block';
+  toggleScroll();
+
+  confirm.onclick = (e) => {
+    e.preventDefault();
+    const options = {
+      method: 'DELETE',
+      headers: { authorization: `Bearer ${token}` },
+    };
+    fetch(`${urlPrefix}/api/v1/user/${email}`, options)
+    .then(res => res.json())
+    .then((response) => {
+      if (response.status === 200) {
+        message.innerHTML = response.message;
+        hasUpdatedInfo = true;
+      } else {
+        message.innerHTML = response.error;
+      }
+      confirmationModal.style.display = 'none';
+      notificationModal.style.display = 'block';
+    })
+    .catch((err) => {
+      message.innerHTML = errorMessage(err);
+      notificationModal.style.display = 'block';
+    });
+  };
+  decline.onclick = (e) => {
+    e.preventDefault();
+    confirmationModal.style.display = 'none';
+    toggleScroll();
+  };
+};
 
 const fetchUsers = (url, msgIfEmpty) => {
   const userList = document.querySelector('.users-list');
@@ -33,7 +76,7 @@ const fetchUsers = (url, msgIfEmpty) => {
         const btnGrp = document.createElement('div');
         const msgUser = document.createElement('button');
         const suspendBtn = document.createElement('button');
-        const deleteAdBtn = document.createElement('button');
+        const deleteUserBtn = document.createElement('button');
 
         if (isAdmin) {
           userItem.style.backgroundColor = '#ccc';
@@ -56,13 +99,17 @@ const fetchUsers = (url, msgIfEmpty) => {
         msgUser.setAttribute('class', 'send-msg full-btn btn');
         msgUser.innerHTML = 'Message User';
         suspendBtn.setAttribute('class', 'suspend full-btn btn');
-        suspendBtn.innerHTML = 'Suspend User';
-        deleteAdBtn.setAttribute('class', 'delete full-btn btn');
-        deleteAdBtn.innerHTML = 'Delete Account';
+        suspendBtn.innerHTML = 'Make Admin';
+        deleteUserBtn.setAttribute('class', 'delete full-btn btn');
+        deleteUserBtn.innerHTML = 'Delete Account';
+        deleteUserBtn.onclick = () => {
+          deleteUser({ email, first_name, last_name });
+        };
+
         btnGrp.setAttribute('class', 'admin-actions p-15');
         btnGrp.appendChild(msgUser);
         btnGrp.appendChild(suspendBtn);
-        btnGrp.appendChild(deleteAdBtn);
+        btnGrp.appendChild(deleteUserBtn);
 
         userItem.appendChild(userDetails);
         userItem.appendChild(btnGrp);
@@ -101,5 +148,6 @@ window.onload = () => {
 closeNotifation.onclick = (e) => {
   e.preventDefault();
   notificationModal.style.display = 'none';
-  document.location.reload();
+  if (hasUpdatedInfo) autoRefresh(0);
+  toggleScroll();
 };
