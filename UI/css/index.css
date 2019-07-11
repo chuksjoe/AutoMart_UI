@@ -41,7 +41,8 @@ section {
 section h2, section p {
 	text-align: center;
 }
-.services-groug, .categories-group {
+.services-groug,
+.categories-group {
 	max-width: 1200px;
 	margin: 0 auto;
 	display: flex;
@@ -92,10 +93,36 @@ section h2, section p {
 	background-color: #333;
 	color: #fff;
 }
-.bt-category {
-	width: 24%;
-	background-color: #fff;
+div.bt-wrapper,
+div.m-wrapper {
+	display: block;
+	overflow: hidden;
+	position: relative;
 }
+.bt-carousel,
+.m-carousel {
+	display: flex;
+	flex-wrap: wrap;
+	-webkit-overflow-scrolling: touch;
+	transition: .5s ease-in-out;
+}
+.bt-category {
+	background-color: #fff;
+	display: inline-flex;
+	flex: 1 0 250px;
+	margin: 0 10px;
+}
+.slide-nav-btns {
+	position: absolute;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  top: 0;
+}
+.slide-btn {
+	padding: 5px 10px;
+}
+
 .bt-category img, .m-category img {
 	width: 100%;
 }
@@ -105,9 +132,11 @@ section h2, section p {
 	background-color: #eee;
 }
 .m-category {
-	width: 18%;
 	background-color: #fff;
 	box-shadow: 0 0 3px #444;
+	display: inline-flex;
+	flex: 1 0 200px;
+	margin: 2px 10px;
 }
 .m-category:hover {
 	box-shadow: 0 2px 5px #444;
@@ -121,19 +150,6 @@ section h2, section p {
   .services-groug {
   	display: block;
   }
-}
-
-@media only screen and (max-width: 680px) {
-	.bt-category {
-		width: 32%;
-	}
-	.m-category {
-		width: 24%;
-	}
-	.btc-4,
-	.mc-5 {
-		display: none;
-	}
 }
 
 @media only screen and (max-width: 470px) {
@@ -158,15 +174,5 @@ section h2, section p {
 	.service a {
 		position: static;
 		float: right;
-	}
-	.bt-category {
-		width: 49%;
-	}
-	.m-category {
-		width: 32%;
-	}
-	.btc-3,
-	.mc-4 {
-		display: none;
 	}
 }

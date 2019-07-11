@@ -1,7 +1,9 @@
 h2 {
 	text-align: center;
 }
-
+.users-list {
+	padding: 0;
+}
 .user-list-item {
 	max-width: 1000px;
 	margin: 0 auto 10px;
