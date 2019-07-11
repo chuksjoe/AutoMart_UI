@@ -14,6 +14,21 @@ body {
   display: none;
 }
 
+/*customize my scrollbars*/
+::-webkit-scrollbar {
+  width: 25px;
+}
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px #0069d9;
+  border-radius: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 10px rgba(3, 3, 3, 0.5);
+}
+
 /*General Navigation bar styling*/
 header {
   background-color: rgba(0, 0, 0, 0.8);
@@ -366,6 +381,7 @@ h3.c-details-list {
 .car-price {
   font-size: 2rem;
   margin: 0;
+  color: #B71513;
 }
 
 /*modal views and overlay*/
