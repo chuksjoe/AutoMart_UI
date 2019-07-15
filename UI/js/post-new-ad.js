@@ -10,7 +10,7 @@ const transmission_type = document.getElementById('transmission');
 const fuel_type = document.getElementById('fuel-type');
 const fuel_cap = document.getElementById('fuel-cap');
 const doors = document.getElementById('doors');
-const img_url = document.getElementById('upload-image');
+const image_url = document.getElementById('upload-image');
 const description = document.getElementById('description');
 
 const ac = document.querySelector('input[value="ac"]');
@@ -57,7 +57,7 @@ function previewImage(fieldId, previewB) {
 	}
 }
 
-img_url.onchange = () => previewImage('upload-image', previewBox);
+image_url.onchange = () => previewImage('upload-image', previewBox);
 
 // Validation function
 const validateForm = () => {
@@ -74,7 +74,7 @@ const validateForm = () => {
 	if (fuel_type.value === '--') errorFields.push('fuel_type');
 	if (fuel_cap.value === '') errorFields.push('fuel_cap');
 	if (doors.value === '') errorFields.push('doors');
-	if (img_url.value === '') errorFields.push('img_url');
+	if (image_url.value === '') errorFields.push('image_url');
 	if (description.value === '') errorFields.push('description');
 
 	return errorFields;
@@ -94,7 +94,7 @@ const clearFormFields = () => {
 	fuel_type.value = null;
 	fuel_cap.value = null;
 	doors.value = null;
-	img_url.value = null;
+	image_url.value = null;
 	description.value = null;
 };
 
@@ -113,7 +113,7 @@ const handleErrors = (errors) => {
 		else if (err === 'fuel_type') errMsg += 'fuel type cannot be empty<br/>';
 		else if (err === 'fuel_cap') errMsg += 'fuel capacity cannot be empty<br/>';
 		else if (err === 'doors') errMsg += 'number of doors cannot be empty<br/>';
-		else if (err === 'img_url') errMsg += 'the image cannot be empty<br/>';
+		else if (err === 'image_url') errMsg += 'the image cannot be empty<br/>';
 		else if (err === 'description') errMsg += 'description cannot be empty<br/>';
 		errorDiv.classList.remove('hide');
 		errorDiv.innerHTML = errMsg;

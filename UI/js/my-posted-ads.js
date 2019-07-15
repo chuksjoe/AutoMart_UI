@@ -85,7 +85,7 @@ const openUpdateModal = (params) => {
 
     const options = {
       method: 'PATCH',
-      body: JSON.stringify({ new_price }),
+      body: JSON.stringify({ price: new_price }),
       headers: { 'Content-Type': 'application/json', authorization: `Bearer ${token}` },
     };
     fetch(`${urlPrefix}/api/v1/car/${id}/price`, options)
@@ -152,9 +152,13 @@ const updateAdStatus = (params) => {
 };
 
 const fetchCarAds = (url, msgIfEmpty) => {
+  const options = {
+    method: 'GET',
+    headers: { authorization: `Bearer ${token}` },
+  };
   const carList = document.querySelector('.car-list');
   carList.innerHTML = '<div id="loading"><img src="../images/loader.gif" /></div>';
-  fetch(url)
+  fetch(url, options)
   .then(res => res.json())
   .then((response) => {
     const res = response;
@@ -162,7 +166,7 @@ const fetchCarAds = (url, msgIfEmpty) => {
       carList.innerHTML = null;
       res.data.map((car) => {
         const {
-          id, name, body_type, state, status, price, img_url, created_on,
+          id, name, body_type, state, status, price, image_url, created_on,
         } = car;
         const carCard = document.createElement('li');
         const carImg = document.createElement('div');
@@ -174,7 +178,7 @@ const fetchCarAds = (url, msgIfEmpty) => {
 
         carCard.setAttribute('class', 'car-card flex-container');
         carImg.classList.add('car-image');
-        carImg.innerHTML = `<img src="${img_url}" title="Preview AD">
+        carImg.innerHTML = `<img src="${image_url}" title="Preview AD">
             <label class="car-state-tag">${state}</label>`;
         carImg.onclick = () => {
           const btnGrpPrev = document.createElement('div');

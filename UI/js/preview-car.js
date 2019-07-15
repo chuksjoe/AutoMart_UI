@@ -4,22 +4,26 @@ const previewCar = (carId, btnGrp) => {
   const carDetails = document.querySelector('#car-preview-overlay .car-view-detail');
   const mainDesc = document.querySelector('#car-preview-overlay .car-view-main-desc');
   const otherInfo = document.querySelector('#car-preview-overlay .other-info');
+  const options = {
+    method: 'GET',
+    headers: { authorization: `Bearer ${token}` },
+  };
 
   carPreviewModal.innerHTML = '<div id="loading"><img src="../images/loader.gif" /></div>';
-  fetch(`${urlPrefix}/api/v1/car/${carId}`)
+  fetch(`${urlPrefix}/api/v1/car/${carId}`, options)
   .then(res => res.json())
   .then((response) => {
     if (response.status === 200) {
       const car = response.data;
       const {
-        name, img_url, manufacturer, model, year, state, owner_id, owner_name, price,
+        name, image_url, manufacturer, model, year, state, owner_id, owner, price,
         body_type, fuel_type, mileage, color, transmission_type, fuel_cap, created_on, doors,
         description, ac, arm_rest, air_bag, dvd_player, fm_radio, tinted_windows,
       } = car;
       document.querySelector('#car-preview-overlay .modal-header').innerHTML = name;
       document.querySelector('#car-preview-overlay .added-date').innerHTML = `Added on: ${configDate(created_on)}`;
 
-      carDetails.innerHTML = `<div class="car-view-image"><img src="${img_url}" alt="${name}"></div>`;
+      carDetails.innerHTML = `<div class="car-view-image"><img src="${image_url}" alt="${name}"></div>`;
       mainDesc.innerHTML = `
       <p class="c-price">Price: &#8358 ${parseInt(price, 10).toLocaleString('en-US')}</p>
       <div class="prop-list flex-container">
@@ -34,7 +38,7 @@ const previewCar = (carId, btnGrp) => {
         <p class="prop"><b>Mileage:</b><br>${mileage.toLocaleString('en-US')}mpg</p>
         <p class="prop"><b>Transmission:</b><br>${transmission_type}</p>
         <p class="prop"><b>Doors:</b><br>${doors} doors</p>
-        <p class="prop"><b>Posted By:</b><br>${(owner_id === parseInt(user_id, 10) ? 'Me' : owner_name)}</p>
+        <p class="prop"><b>Posted By:</b><br>${(owner_id === parseInt(user_id, 10) ? 'Me' : owner)}</p>
       </div>`;
       otherInfo.innerHTML = `
       <div class="description">
