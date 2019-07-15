@@ -127,6 +127,6 @@ const logout = document.querySelector('.logout');
 if (logout !== null) {
   logout.onclick = () => {
     sessionStorage.clear();
-    document.location.href = './marketplace.html';
+    document.location.href = './index.html';
   };
 }

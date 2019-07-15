@@ -112,7 +112,7 @@ signupBtn.onclick = (e) => {
 				errorDiv.style.backgroundColor = '#4b5';
 				errorDiv.innerHTML = `Congratulations ${res.data.first_name} ${res.data.last_name}.<br>You have successfully
 				registered on AutoMart with this e-mail address: ${res.data.email}.<br/>
-				click <a href='/api/v1/signin'>here to sign into your account.</a>`;
+				click <a href='./signin.html'>here to sign into your account.</a>`;
 			}
 			signupBtn.innerHTML = 'Create Account';
 			signupBtn.disabled = null;

@@ -1,6 +1,3 @@
-const memberNav = document.querySelector('.member-nav');
-const visitorNav = document.querySelector('.visitor-nav');
-
 const carPreview = document.getElementById('car-preview-overlay');
 const purchaseModal = document.getElementById('purchase-order-overlay');
 const fraudModal = document.getElementById('fraudulent-flag-overlay');
@@ -11,7 +8,6 @@ const closeFraudModal = document.getElementById('close-fraud-modal');
 const closeNotifation = document.querySelector('.close-notification');
 const message = document.querySelector('#notification-overlay .message');
 
-const userName = document.querySelector('.user-name');
 const user_id = sessionStorage.getItem('user_id');
 const is_loggedin = sessionStorage.getItem('is_loggedin');
 const token = sessionStorage.getItem('token');
@@ -22,28 +18,6 @@ const urlPrefix = 'https://auto-mart-adc.herokuapp.com';
 const currentPage = 'marketplace';
 
 /* ================ Helper funtions ================= */
-const toggleNavBar = (is_logged, display = 'flex') => {
-  if (is_logged) {
-    // display marketplace with nav bar for logged in users
-    visitorNav.style.display = 'none';
-    userName.innerHTML = `${sessionStorage.getItem('first_name')}
-      ${sessionStorage.getItem('last_name').charAt(0)}.`;
-    memberNav.style.display = display;
-  } else {
-    // display marketplace with nav bar for a users that is not logged in
-    memberNav.style.display = 'none';
-    visitorNav.style.display = display;
-  }
-};
-
-const displayNavBar = () => {
-  if (window.innerWidth < 750) {
-    toggleNavBar(is_loggedin, 'block');
-  } else {
-    toggleNavBar(is_loggedin);
-  }
-};
-
 // open purchase order modal
 const openPurchaseModal = (params) => {
   const {
@@ -61,15 +35,15 @@ const openPurchaseModal = (params) => {
 
   placeOrderBtn.onclick = (e) => {
     e.preventDefault();
-    let price_offered = document.querySelector('.purchase-order-form .price').value;
-    price_offered = price_offered.replace(/\D/g, '');
-    if (price_offered === '') {
+    let amount = document.querySelector('.purchase-order-form .price').value;
+    amount = amount.replace(/\D/g, '');
+    if (amount === '') {
       message.innerHTML = 'The price field cannot be empty!';
       notificationModal.style.display = 'block';
       return 0;
     }
 
-    const data = { car_id: id, price_offered };
+    const data = { car_id: id, amount };
     const options = {
       method: 'POST',
       body: JSON.stringify(data),
@@ -81,8 +55,8 @@ const openPurchaseModal = (params) => {
       const res = response;
       if (res.status === 201) {
         message.innerHTML = `You have successfully placed an order for <b>${res.data.car_name}</b>.<br/><br/>
-        Actual Price: &#8358 ${parseInt(res.data.price, 10).toLocaleString('en-US')}<br/>
-        Price Offered: &#8358 ${parseInt(res.data.price_offered, 10).toLocaleString('en-US')}`;
+        Actual Price: &#8358 ${parseInt(res.data.car_price, 10).toLocaleString('en-US')}<br/>
+        Price Offered: &#8358 ${parseInt(res.data.amount, 10).toLocaleString('en-US')}`;
       } else {
         message.innerHTML = res.error;
       }
@@ -133,7 +107,7 @@ const openFraudModal = (params) => {
     .then((response) => {
       const res = response;
       if (res.status === 201) {
-        message.innerHTML = `${res.message}<br/>Car Ad Owner: ${res.data.owner_name}`;
+        message.innerHTML = `${res.message}<br/>Car Ad Owner: ${res.data.owner}`;
         document.querySelector('.flagging-form .reason').value = null;
         document.querySelector('.flagging-form .description').value = null;
       } else {
@@ -154,7 +128,11 @@ const openFraudModal = (params) => {
 const fetchCarAds = (url, msgIfEmpty) => {
   const carList = document.querySelector('.car-list');
   carList.innerHTML = '<div id="loading"><img src="../images/loader.gif" /></div>';
-  fetch(url)
+  const options = {
+    method: 'GET',
+    headers: { authorization: `Bearer ${token}` },
+  };
+  fetch(url, options)
   .then(res => res.json())
   .then((response) => {
     const res = response;
@@ -162,7 +140,7 @@ const fetchCarAds = (url, msgIfEmpty) => {
       carList.innerHTML = null;
       res.data.map((car) => {
         const {
-          id, name, model, body_type, manufacturer, year, state, price, img_url, owner_id,
+          id, name, model, body_type, manufacturer, year, state, price, image_url, owner_id,
         } = car;
         const carCard = document.createElement('li');
         const carImg = document.createElement('div');
@@ -178,32 +156,16 @@ const fetchCarAds = (url, msgIfEmpty) => {
           btnGrp.setAttribute('class', 'btn-group flex-container');
           orderBtnOnPrev.setAttribute('class', 'half-btn btn');
           orderBtnOnPrev.onclick = () => {
-            if (is_loggedin) {
-              openPurchaseModal({
-                id, name, price, body_type,
-              });
-            } else {
-              message.innerHTML = `Please ensure you are logged-in before placing an order.<br/>
-              If you don't have an account on AutoMart,<br/><a href='./signup.html'>Click here to Sign-up.</a>
-              <br/>else,<br/><a href='./signin.html'>Click here to Sign-in.</a>`;
-              notificationModal.style.display = 'block';
-              toggleScroll();
-            }
+            openPurchaseModal({
+              id, name, price, body_type,
+            });
           };
           orderBtnOnPrev.innerHTML = 'Place Order';
           flagBtn.setAttribute('class', 'half-btn btn');
           flagBtn.onclick = () => {
-            if (is_loggedin) {
-              openFraudModal({
-                id, name, price, body_type,
-              });
-            } else {
-              message.innerHTML = `Please ensure you are logged-in before flagging an AD.<br/>
-              If you don't have an account on AutoMart,<br/><a href='./signup.html'>Click here to Sign-up.</a>
-              <br/>else,<br/><a href='./signin.html'>Click here to Sign-in.</a>`;
-              notificationModal.style.display = 'block';
-              toggleScroll();
-            }
+            openFraudModal({
+              id, name, price, body_type,
+            });
           };
           flagBtn.innerHTML = 'Flag Fradulent AD';
           if (owner_id === parseInt(user_id, 10)) {
@@ -222,23 +184,15 @@ const fetchCarAds = (url, msgIfEmpty) => {
         carInfo.classList.add('car-info');
         orderBtn.classList.add('order', 'full-btn', 'btn');
         orderBtn.onclick = () => {
-          if (is_loggedin) {
-            openPurchaseModal({
-              id, name, price, body_type,
-            });
-          } else {
-            message.innerHTML = `Please ensure you are logged-in before placing an order.<br/>
-            If you don't have an account on AutoMart,<br/><a href='./signup.html'>Click here to Sign-up.</a>
-            <br/>else,<br/><a href='./signin.html'>Click here to Sign-in.</a>`;
-            notificationModal.style.display = 'block';
-            toggleScroll();
-          }
+          openPurchaseModal({
+            id, name, price, body_type,
+          });
         };
         orderBtn.innerHTML = 'Place Order';
         if (owner_id === parseInt(user_id, 10)) {
           orderBtn.setAttribute('disabled', 'disabled');
         }
-        carImg.innerHTML = `<img src="${img_url}" title="Preview AD">
+        carImg.innerHTML = `<img src="${image_url}" title="Preview AD">
             <label class="car-state-tag">${state}</label>`;
         carInfo.innerHTML = `<h3 class="c-details-mv">${year} ${manufacturer}<br>${model}</h3>
             <p class="car-price">&#8358 ${parseInt(price, 10).toLocaleString('en-US')}</p>`;
@@ -264,16 +218,18 @@ const fetchCarAds = (url, msgIfEmpty) => {
 /* ==================== MAIN LOGICS ====================== */
 window.onload = () => {
   // Setup the right Nav Bar depending on whether the user is registered or not
-  displayNavBar();
+if (!is_loggedin) {
+    window.location.href = './signin.html';
+  }
+
+  const userName = document.querySelector('.user-name');
+
+  userName.innerHTML = `${sessionStorage.getItem('first_name')}
+   ${sessionStorage.getItem('last_name').charAt(0)}.`;
 
   // fetch the cars from database and populate the marketplace
    fetchCarAds(`${urlPrefix}/api/v1/car?status=Available`, 'No car ad found!');
 };
-
-// if the window is resized, it should check on the nav bar, and make neccesary adjustments
-window.addEventListener('resize', () => {
-  displayNavBar();
-});
 
 closeCarPreview.onclick = () => {
   carPreview.style.display = 'none';

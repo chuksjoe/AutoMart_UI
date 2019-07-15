@@ -1,8 +1,3 @@
-.visitor-nav,
-.member-nav {
-	display: none;
-	height: 40px;
-}
 .car-card {
   width: 32%;
   background-color: #fff;
@@ -30,13 +25,6 @@
 	}
 	.car-card {
 		width: 48%;
-	}
-}
-@media only screen and (max-width: 750px) {
-	.visitor-nav,
-	.member-nav {
-		display: none;
-		height: auto;
 	}
 }
 @media only screen and (max-width: 550px) {

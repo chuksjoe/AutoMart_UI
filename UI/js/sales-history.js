@@ -14,7 +14,7 @@ let hasUpdatedInfo = false;
 
 const reactToOffer = (params) => {
   const {
-    id, car_name, price, price_offered, buyer_name, action,
+    id, car_name, car_price, amount, buyer_name, action,
   } = params;
   const confirm = document.querySelector('#confirmation-overlay .yes');
   const decline = document.querySelector('#confirmation-overlay .no');
@@ -35,8 +35,8 @@ const reactToOffer = (params) => {
       if (response.status === 200) {
         message.innerHTML = `
         You have successfully <b>${action}ed</b> ${buyer_name}'s offer for
-        <b>${car_name}</b><br/>Price of Car: ${parseInt(price, 10).toLocaleString('en-US')}<br/>
-        Price Offered: ${parseInt(price_offered, 10).toLocaleString('en-US')}`;
+        <b>${car_name}</b><br/>Price of Car: ${parseInt(car_price, 10).toLocaleString('en-US')}<br/>
+        Price Offered: ${parseInt(amount, 10).toLocaleString('en-US')}`;
         hasUpdatedInfo = true;
       } else {
         message.innerHTML = response.error;
@@ -83,8 +83,8 @@ window.onload = () => {
       historyList.innerHTML = null;
       res.data.map((order) => {
         const {
-          id, car_name, price, buyer_name,
-          price_offered, created_on, status,
+          id, car_name, car_price, buyer_name,
+          amount, created_on, status,
         } = order;
         const orderCard = document.createElement('li');
         const btnGrp = document.createElement('div');
@@ -102,22 +102,22 @@ window.onload = () => {
 				</div>
 				<div class="purchase-details p-15">
 					<h3 class="c-details-list">Purchase Order from ${buyer_name}</h3>
-					<p class="purchase-info">For ${car_name} @ &#8358 ${parseInt(price, 10).toLocaleString('en-US')}</p>
-					<p class="purchase-info">Price Offered: &#8358 ${parseInt(price_offered, 10).toLocaleString('en-US')}</p>
+					<p class="purchase-info">For ${car_name} @ &#8358 ${parseInt(car_price, 10).toLocaleString('en-US')}</p>
+					<p class="purchase-info">Price Offered: &#8358 ${parseInt(amount, 10).toLocaleString('en-US')}</p>
 				</div>`;
         btnGrp.setAttribute('class', 'user-actions p-15');
 				acceptOrderBtn.setAttribute('class', 'update-p full-btn btn');
 				acceptOrderBtn.innerHTML = 'Accept Offer';
 				acceptOrderBtn.onclick = () => {
 					reactToOffer({
-						id, car_name, price, price_offered, buyer_name, action: 'accept',
+						id, car_name, car_price, amount, buyer_name, action: 'accept',
 					});
 				};
         declineOrderBtn.setAttribute('class', 'delete full-btn btn');
 				declineOrderBtn.innerHTML = 'Decline Offer';
 				declineOrderBtn.onclick = () => {
 					reactToOffer({
-						id, car_name, price, price_offered, buyer_name, action: 'reject',
+						id, car_name, car_price, amount, buyer_name, action: 'reject',
 					});
 				};
         if (status !== 'Pending') {

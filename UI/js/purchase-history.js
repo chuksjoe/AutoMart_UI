@@ -16,15 +16,15 @@ let hasUpdatedInfo = false;
 /* ================ Helper funtions ================= */
 const deleteAd = (params) => {
   const {
-    id, car_name, owner_name, status, price, price_offered,
+    id, car_name, owner, status, car_price, amount,
   } = params;
   const action = status === 'Pending' ? 'cancel' : 'delete';
   const confirm = document.querySelector('#confirmation-overlay .yes');
   const decline = document.querySelector('#confirmation-overlay .no');
 
   confMsg.innerHTML = `Are you sure you want to ${action} your ${status} offer for<br/><b>${car_name}</b></br>
-  owned by ${owner_name}?<hr/>Car Price: &#8358 ${parseInt(price, 10).toLocaleString('en-US')}<br/>
-  Price you offered: &#8358 ${parseInt(price_offered, 10).toLocaleString('en-US')}`;
+  owned by ${owner}?<hr/>Car Price: &#8358 ${parseInt(car_price, 10).toLocaleString('en-US')}<br/>
+  Price you offered: &#8358 ${parseInt(amount, 10).toLocaleString('en-US')}`;
   confirmationModal.style.display = 'block';
   toggleScroll();
 
@@ -60,7 +60,7 @@ const deleteAd = (params) => {
 
 const openUpdateModal = (params) => {
 	const {
-    id, car_name, price, car_body_type, price_offered,
+    id, car_name, car_price, car_body_type, amount,
   } = params;
   const updatePriceBtn = document.getElementById('update-price');
   const orderInfo = document.querySelector('#update-price-overlay .order-info');
@@ -68,9 +68,9 @@ const openUpdateModal = (params) => {
   orderInfo.innerHTML = `
   <h3 class="c-details-mv">${car_name}</h3>
   <p class="c-b-type">(${car_body_type})</p>
-  <p class="c-price">Price: &#8358 ${parseInt(price, 10).toLocaleString('en-US')}</p><hr>
+  <p class="c-price">Price: &#8358 ${parseInt(car_price, 10).toLocaleString('en-US')}</p><hr>
   <p class="c-c-o-price">
-  Current Price Offered:<br>&#8358 ${parseInt(price_offered, 10).toLocaleString('en-US')}</p>`;
+  Current Price Offered:<br>&#8358 ${parseInt(amount, 10).toLocaleString('en-US')}</p>`;
 
   updatePriceModal.style.display = 'block';
   toggleScroll();
@@ -86,7 +86,7 @@ const openUpdateModal = (params) => {
     }
     const options = {
       method: 'PATCH',
-      body: JSON.stringify({ new_price }),
+      body: JSON.stringify({ price: new_price }),
       headers: { 'Content-Type': 'application/json', authorization: `Bearer ${token}` },
     };
     fetch(`${urlPrefix}/api/v1/order/${id}/price`, options)
@@ -96,7 +96,7 @@ const openUpdateModal = (params) => {
       if (res.status === 200) {
         const { old_price_offered, new_price_offered } = res.data;
         message.innerHTML = `You have successfully updated the price you offered for <b>${res.data.car_name}.</b><br/><br/>
-        Actual Price: &#8358 ${parseInt(res.data.price, 10).toLocaleString('en-US')}<br/>
+        Actual Price: &#8358 ${parseInt(res.data.car_price, 10).toLocaleString('en-US')}<br/>
         Old Price Offered: &#8358 ${parseInt(old_price_offered, 10).toLocaleString('en-US')}<br/>
         New Price Offered: &#8358 ${parseInt(new_price_offered, 10).toLocaleString('en-US')}`;
         hasUpdatedInfo = true;
@@ -141,8 +141,8 @@ window.onload = () => {
       historyList.innerHTML = null;
       res.data.map((order) => {
         const {
-          id, car_name, car_body_type, price, owner_name,
-          price_offered, created_on, status,
+          id, car_name, car_body_type, car_price, owner,
+          amount, created_on, status,
         } = order;
         const orderCard = document.createElement('li');
         const btnGrp = document.createElement('div');
@@ -159,16 +159,16 @@ window.onload = () => {
 				</div>
 				<div class="purchase-details p-15">
 					<h3 class="c-details-list">Purchase Order for ${car_name}</h3>
-					<p class="purchase-info">Actual Price: &#8358 ${parseInt(price, 10).toLocaleString('en-US')}.
-					Owner: ${owner_name}</p>
-					<p class="purchase-info">Price Offered: &#8358 ${parseInt(price_offered, 10).toLocaleString('en-US')}</p>
+					<p class="purchase-info">Actual Price: &#8358 ${parseInt(car_price, 10).toLocaleString('en-US')}.
+					Owner: ${owner}</p>
+					<p class="purchase-info">Price Offered: &#8358 ${parseInt(amount, 10).toLocaleString('en-US')}</p>
 				</div>`;
 				btnGrp.setAttribute('class', 'user-actions p-15');
 				updateOrderBtn.setAttribute('class', 'update-p full-btn btn');
 				updateOrderBtn.innerHTML = 'Update Price';
 				updateOrderBtn.onclick = () => {
 					openUpdateModal({
-						id, car_name, price, car_body_type, price_offered,
+						id, car_name, car_price, car_body_type, amount,
 					});
 				};
         if (status !== 'Pending') {
@@ -178,7 +178,7 @@ window.onload = () => {
 				cancelOrderBtn.innerHTML = 'Cancel/Delete Offer';
         cancelOrderBtn.onclick = () => {
           deleteAd({
-            id, car_name, owner_name, status, price, price_offered,
+            id, car_name, owner, status, car_price, amount,
           });
         };
 

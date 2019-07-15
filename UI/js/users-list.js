@@ -98,11 +98,11 @@ const makeAdmin = (params) => {
 const fetchUsers = (url, msgIfEmpty) => {
   const userList = document.querySelector('.users-list');
   userList.innerHTML = '<div id="loading"><img src="../images/loader.gif" /></div>';
-  const init = {
+  const options = {
     method: 'GET',
-    headers: { 'Content-Type': 'application/json', authorization: `Bearer ${token}` },
+    headers: { authorization: `Bearer ${token}` },
   };
-  fetch(url, init)
+  fetch(url, options)
   .then(res => res.json())
   .then((response) => {
     const res = response;

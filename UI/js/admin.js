@@ -23,13 +23,13 @@ let hasUpdatedInfo = false;
 /* ================ Helper funtions ================= */
 const deleteFlag = (params) => {
   const {
-    id, car_name, owner_name, owner_id,
+    id, car_name, owner, owner_id,
   } = params;
   const confirm = document.querySelector('#confirmation-overlay .yes');
   const decline = document.querySelector('#confirmation-overlay .no');
 
   confMsg.innerHTML = `Are you sure you want to delete<br/>flag with ID ${id} placed on<br/><b>${car_name}</b>
-  <br/>owned by ${(owner_id === parseInt(user_id, 10) ? 'you' : owner_name)}?`;
+  <br/>owned by ${(owner_id === parseInt(user_id, 10) ? 'you' : owner)}?`;
   confirmationModal.style.display = 'block';
   toggleScroll();
 
@@ -65,13 +65,13 @@ const deleteFlag = (params) => {
 
 const markAddressed = (params) => {
   const {
-    id, car_name, owner_name, owner_id,
+    id, car_name, owner, owner_id,
   } = params;
   const confirm = document.querySelector('#confirmation-overlay .yes');
   const decline = document.querySelector('#confirmation-overlay .no');
 
   confMsg.innerHTML = `Are you sure you want to mark<br/>flag with ID ${id} placed on<br/><b>${car_name}</b>
-  <br/>owned by ${(owner_id === parseInt(user_id, 10) ? 'you' : owner_name)} as Addressed?`;
+  <br/>owned by ${(owner_id === parseInt(user_id, 10) ? 'you' : owner)} as Addressed?`;
   confirmationModal.style.display = 'block';
   toggleScroll();
 
@@ -125,7 +125,7 @@ const viewFlagList = (carId, carName) => {
       flagListModal.innerHTML = null;
       res.data.map((flag) => {
         const {
-          id, reporter_id, owner_name, owner_id, reason, description, status, created_on, car_name,
+          id, reporter_id, owner, owner_id, reason, description, status, created_on, car_name,
         } = flag;
         const flagCard = document.createElement('li');
         const btnGrp = document.createElement('div');
@@ -142,21 +142,21 @@ const viewFlagList = (carId, carName) => {
         <div class="flag-main-desc">
           <h3>Reason: ${reason}</h3>
           <p>Description: ${description}</p>
-          <p>Car Owner: ${owner_name}, Reporter ID: ${reporter_id}, Flag ID: ${id}</p>
+          <p>Car Owner: ${owner}, Reporter ID: ${reporter_id}, Flag ID: ${id}</p>
         </div>`;
 
         markAddressedBtn.setAttribute('class', 'mark-addressed full-btn btn');
         markAddressedBtn.innerHTML = 'Mark Addressed';
         markAddressedBtn.onclick = () => {
           markAddressed({
-            id, car_name, owner_name, owner_id,
+            id, car_name, owner, owner_id,
           });
         };
         deleteFlagBtn.setAttribute('class', 'del-flag delete full-btn btn');
         deleteFlagBtn.innerHTML = 'Delete Flag';
         deleteFlagBtn.onclick = () => {
           deleteFlag({
-            id, car_name, owner_name, owner_id,
+            id, car_name, owner, owner_id,
           });
         };
 
@@ -184,13 +184,13 @@ const viewFlagList = (carId, carName) => {
 
 const deleteAd = (params) => {
   const {
-    id, name, owner_id, owner_name,
+    id, name, owner_id, owner,
   } = params;
   const confirm = document.querySelector('#confirmation-overlay .yes');
   const decline = document.querySelector('#confirmation-overlay .no');
 
   confMsg.innerHTML = `Are you sure you want to delete<br/><b>${name}</b>
-  <br/>owned by ${(owner_id === parseInt(user_id, 10) ? 'you' : owner_name)}?`;
+  <br/>owned by ${(owner_id === parseInt(user_id, 10) ? 'you' : owner)}?`;
   confirmationModal.style.display = 'block';
   toggleScroll();
 
@@ -225,9 +225,13 @@ const deleteAd = (params) => {
 };
 
 const fetchCarAds = (url, msgIfEmpty) => {
+  const options = {
+    method: 'GET',
+    headers: { authorization: `Bearer ${token}` },
+  };
   const carList = document.querySelector('.car-list');
   carList.innerHTML = '<div id="loading"><img src="../images/loader.gif" /></div>';
-  fetch(url)
+  fetch(url, options)
   .then(res => res.json())
   .then((response) => {
     const res = response;
@@ -235,7 +239,7 @@ const fetchCarAds = (url, msgIfEmpty) => {
       carList.innerHTML = null;
       res.data.map((car) => {
         const {
-          id, name, owner_id, owner_name, body_type, state, status, price, img_url, created_on,
+          id, name, owner_id, owner, body_type, state, status, price, image_url, created_on,
         } = car;
         const carCard = document.createElement('li');
         const carImg = document.createElement('div');
@@ -246,7 +250,7 @@ const fetchCarAds = (url, msgIfEmpty) => {
 
         carCard.setAttribute('class', 'car-card flex-container');
         carImg.classList.add('car-image');
-        carImg.innerHTML = `<img src="${img_url}" title="Preview AD">
+        carImg.innerHTML = `<img src="${image_url}" title="Preview AD">
             <label class="car-state-tag">${state}</label>`;
         carImg.onclick = () => {
           const btnGrpPrev = document.createElement('div');
@@ -262,7 +266,7 @@ const fetchCarAds = (url, msgIfEmpty) => {
           deleteAdBtnPrev.innerHTML = 'Delete Ad';
           deleteAdBtnPrev.onclick = () => {
             deleteAd({
-              id, name, owner_id, owner_name,
+              id, name, owner_id, owner,
             });
           };
           btnGrpPrev.setAttribute('class', 'btn-group flex-container');
@@ -281,7 +285,7 @@ const fetchCarAds = (url, msgIfEmpty) => {
                             <label class="car-status-tag">${status}</label>
                             <p class="car-price">&#8358 ${parseInt(price, 10).toLocaleString('en-US')}</p>
                             <p><b>Body type:</b> ${body_type}</p>
-                            <p>Posted by ${owner_name}, on: ${configDate(created_on)}</p>`;
+                            <p>Posted by ${owner}, on: ${configDate(created_on)}</p>`;
 
         viewFlagsBtn.setAttribute('class', 'view-reports full-btn btn b49');
         viewFlagsBtn.innerHTML = 'View Flags';
@@ -292,7 +296,7 @@ const fetchCarAds = (url, msgIfEmpty) => {
         deleteAdBtn.innerHTML = 'Delete Ad';
         deleteAdBtn.onclick = () => {
           deleteAd({
-            id, name, owner_id, owner_name,
+            id, name, owner_id, owner,
           });
         };
         btnGrp.setAttribute('class', 'admin-actions');
