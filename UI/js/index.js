@@ -10,6 +10,8 @@ const mCards = document.querySelectorAll('.m-card');
 const mSlideLeftBtn = document.querySelector('.m-slide-left');
 const mSlideRightBtn = document.querySelector('.m-slide-right');
 
+let currentWidthIndex = window.innerWidth;
+
 let btImgFullWidth = 0;
 let btOffset = 0;
 let btMaxOffset = 0;
@@ -33,7 +35,10 @@ window.onload = () => {
 };
 
 window.onresize = () => {
-	document.location.reload();
+	if (currentWidthIndex !== window.innerWidth) {
+		document.location.reload();
+    currentWidthIndex = window.innerWidth;
+  }
 };
 
 btSlideLeftBtn.onclick = () => {

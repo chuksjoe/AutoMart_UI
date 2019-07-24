@@ -4,7 +4,7 @@
 body {
   margin: 0;
   font-family: "Oxygen", sans-serif;
-  font-size: 1rem;
+  font-size: 0.9rem;
   background-color: #eee;
 }
 .no-scroll {
@@ -115,9 +115,9 @@ ul.dropdown-list {
   display: none;
   width: 180px;
   top: 37px;
-  right: 0;
-  background-color: rgba(41, 147, 226, 1);
-  box-shadow: 0 0 3px #333;
+  right: -20px;
+  background-color: #333;
+  box-shadow: 0 0 3px #eee;
   color: #fff;
   z-index: 11;
 }
@@ -128,7 +128,7 @@ ul.dropdown-list {
   margin: 0;
   padding-bottom: 10px;
   border-bottom: 2px solid #fff;
-  color: gold;
+  color: #eee;
 }
 .user-avater {
   border-radius: 50%;
@@ -211,7 +211,7 @@ footer {
 
 /*General button styling*/
 .btn {
-  font-size: 1rem;
+  font-size: 0.9rem;
   padding: 10px;
   margin-top: 10px;
   background-color: #0069d9;
@@ -399,14 +399,14 @@ h3.c-details-list {
 .close-btn {
   position: absolute;
   top: 15px;
-  right: 15px;
-  width: 35px;
-  height: 35px;
+  right: 40px;
   background-color: #eee;
   color: #D61313;
-  font-size: 2rem;
-  padding: 2.5px 6.5px;
+  font-size: 3rem;
+  padding: 2px 10px;
+  border-radius: 5px;
   cursor: pointer;
+  z-index: 100;
 }
 .close-btn:hover {
   background-color: #ccc;
@@ -517,6 +517,12 @@ h3.c-details-mv {
   padding: 15px;
 }
 
+.m-0 {
+  margin: 0;
+}
+.f-8 {
+  font-size: 0.8rem;
+}
 @media only screen and (max-width: 800px) {
   .content {
     display: block;
@@ -584,10 +590,23 @@ h3.c-details-mv {
     background-color: #000;
     color: #fff;
   }
+  .close-btn {
+    right: 10px;
+  }
 }
 
 @media only screen and (max-width: 470px) {
   .prop {
     width: 49%;
+  }
+}
+
+@media only screen and (max-width: 350px) {
+  footer .inner-div {
+    display: block;
+    text-align: center;
+  }
+  footer .footer-right {
+    margin: 0 auto;
   }
 }

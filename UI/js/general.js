@@ -1,3 +1,5 @@
+let currentWidth = window.innerWidth;
+
 // Helper functions
 const toggleScroll = () => {
   const overlays = document.querySelectorAll('.overlay');
@@ -43,7 +45,7 @@ const configDate = (dateStr) => {
   const time = date.toLocaleString([], { hour: 'numeric', minute: '2-digit', second: '2-digit' });
   const day = `${days[date.getDay()]},
    ${appendLeadZero(date.getDate())} ${months[date.getMonth()]} ${date.getFullYear()}`;
-  return `${isToday(date) ? 'Today' : day}, ${time}`;
+  return `${isToday(date) ? 'Today' : day}, ${time.replace(' ', '')}`;
 };
 
 const autoRefresh = (time) => {
@@ -57,6 +59,9 @@ const errorMessage = (err) => {
   if (err.message.includes('NetworkError')) {
     msg = `Network Error!<br/>Ensure you are connected to the Internet.<br/>
       Then refresh page.`;
+  } else if (err.message.includes('length')) {
+    msg = `Your session has expired!<br/>Please, re-login to continue.<br/>
+      click <a href='./signin.html'>here to re-login.</a>`;
   } else {
     msg = err.message;
   }
@@ -88,10 +93,28 @@ const createCaptcha = () => {
   return { canvas, code };
 };
 
+const enablePriceSummitBtn = (price, btn) => {
+  if (price.length < 7) {
+    btn.setAttribute('disabled', 'disabled');
+  } else {
+    btn.removeAttribute('disabled');
+  }
+};
+
 /* ============ MAIN LOGICS ========================= */
 // Toggle Menubar filter bar when the screen is below 800px
 const menuList = document.querySelector('.menu-list');
 const menuBtn = document.querySelector('.menu-btn');
+
+const adjustMenubar = () => {
+  if (window.innerWidth > 750) {
+    menuList.style.display = 'flex';
+  } else {
+    menuList.style.display = 'none';
+    menuBtn.firstChild.classList.remove('hide');
+    menuBtn.lastChild.classList.add('hide');
+  }
+};
 
 menuBtn.onclick = () => {
   const icons = document.querySelectorAll('.menu-btn i');
@@ -102,12 +125,9 @@ menuBtn.onclick = () => {
 };
 
 window.addEventListener('resize', () => {
-  if (window.innerWidth > 750) {
-    menuList.style.display = 'flex';
-  } else {
-    menuList.style.display = 'none';
-    menuBtn.firstChild.classList.remove('hide');
-    menuBtn.lastChild.classList.add('hide');
+  if (currentWidth !== window.innerWidth) {
+    adjustMenubar();
+    currentWidth = window.innerWidth;
   }
 });
 

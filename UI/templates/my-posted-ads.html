@@ -96,10 +96,10 @@
 
 		<!-- Modal view to view a specific car -->
 		<div id="car-preview-overlay" class="overlay">
+			<div id="close-car-preview" class="fa fa-times close-btn"></div>
 			<div class="lg-m-v">
 				<h2 class="modal-header"></h2>
 				<p class="added-date"></p>
-				<div id="close-car-preview" class="fa fa-times close-btn"></div>
 				<div class="modal-body">
 					<div class="car-view-detail flex-container">
 						<div class="car-view-image">
@@ -145,8 +145,9 @@
 							<label for="">New Price(&#8358):</label><br>
 							<input type="text" class="price" data-type="number" placeholder="Offering Price(&#8358):">
 						</div>
+						<p class="m-0 f-8">enter price above &#8358 999 to enable submit button.</p>
 						<div class="btn-group flex-container">
-							<button id="update-price" class="half-btn btn">Update Price</button>
+							<button id="update-price" class="half-btn btn" disabled>Update Price</button>
 							<button id="close-update-modal" class="half-btn btn">Cancel</button>
 						</div>
 					</form>

@@ -48,7 +48,9 @@ h3 {
 label.contact {
 	width: 100%;
 	display: block;
-	font-size: 1.3rem;
+	font-size: 1rem;
+	background-color: #eee;
+	padding: 5px;
 }
 input.contact-input,
 button.contact-input {
