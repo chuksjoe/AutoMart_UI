@@ -8,6 +8,17 @@
   bottom: 10px;
   right: 10px;
 }
+.fa-flag {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 1.5rem;
+  color: #FBAA31;
+  cursor: pointer;
+}
+.fa-flag:hover {
+  color: #FEBD2D;
+}
 
 @media only screen and (max-width: 1090px) {
 	.user-actions {

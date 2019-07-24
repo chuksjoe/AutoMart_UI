@@ -134,7 +134,7 @@
 		display: flex;
 		justify-content: space-between;
 	}
-	.full-btn {
+	.flag-actions .full-btn {
 		width: 49%;
 	}
 }

@@ -83,7 +83,9 @@ signinBtn.onclick = (e) => {
 		})
 		.catch((error) => {
 			errorDiv.innerHTML = errorMessage(error);
+			signinBtn.disabled = null;
 			errorDiv.classList.remove('hide');
+			signinBtn.innerHTML = 'Sign In';
 		});
 	}
 };

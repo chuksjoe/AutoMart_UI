@@ -2,6 +2,18 @@
 const filterContainer = document.getElementById('filter-container');
 const filterDdBtn = document.getElementById('filter-dd-btn');
 
+const adjustFilterbar = () => {
+  if (window.innerWidth > 800) {
+    filterContainer.style.display = 'block';
+  } else {
+    filterContainer.style.display = 'none';
+    filterDdBtn.firstChild.classList.remove('hide');
+    filterDdBtn.lastChild.classList.add('hide');
+  }
+};
+
+let currentWidthFR = window.innerWidth;
+
 let filterContent = '';
 const statusFilter = `
 <div class="filter-attr">
@@ -252,12 +264,9 @@ filterDdBtn.addEventListener('click', () => {
 });
 
 window.addEventListener('resize', () => {
-	if (window.innerWidth > 800) {
-    filterContainer.style.display = 'block';
-	} else {
-    filterContainer.style.display = 'none';
-    filterDdBtn.firstChild.classList.remove('hide');
-    filterDdBtn.lastChild.classList.add('hide');
+  if (currentWidthFR !== window.innerWidth) {
+    adjustFilterbar();
+    currentWidthFR = window.innerWidth;
   }
 });
 

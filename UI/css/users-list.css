@@ -9,7 +9,6 @@ h2 {
 	margin: 0 auto 10px;
 	background-color: #fff;
 	list-style: none;
-	padding: 15px;
 	box-shadow: 0 0 3px #333;
 }
 .user-details {
@@ -32,12 +31,13 @@ h2 {
 	.user-details,
 	.admin-actions {
 		width: 100%;
+		padding-top: 0;
 	}
 	.admin-actions {
 		display: flex;
 		justify-content: space-between;
 	}
-	.full-btn {
+	.admin-actions .full-btn {
 		width: 33%;
 	}
 }

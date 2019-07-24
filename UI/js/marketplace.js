@@ -7,6 +7,12 @@ const closePurModal = document.getElementById('close-purchase-modal');
 const closeFraudModal = document.getElementById('close-fraud-modal');
 const closeNotifation = document.querySelector('.close-notification');
 const message = document.querySelector('#notification-overlay .message');
+const placeOrderBtn = document.getElementById('place-order');
+const priceField = document.querySelector('.purchase-order-form .price');
+const flagAdBtn = document.getElementById('flag-ad');
+const descField = document.querySelector('.flagging-form .description');
+const reasonField = document.querySelector('.flagging-form .reason');
+
 
 const user_id = sessionStorage.getItem('user_id');
 const is_loggedin = sessionStorage.getItem('is_loggedin');
@@ -18,12 +24,21 @@ const urlPrefix = 'https://auto-mart-adc.herokuapp.com';
 const currentPage = 'marketplace';
 
 /* ================ Helper funtions ================= */
+const enableFlagBtn = () => {
+  const reason = document.querySelector('.flagging-form .reason').value;
+  const desc = document.querySelector('.flagging-form .description').value;
+  if (reason.length < 3 || desc.length <= 5) {
+    flagAdBtn.setAttribute('disabled', 'disabled');
+  } else {
+    flagAdBtn.removeAttribute('disabled');
+  }
+};
+
 // open purchase order modal
 const openPurchaseModal = (params) => {
   const {
     id, name, price, body_type,
   } = params;
-  const placeOrderBtn = document.getElementById('place-order');
 
   document.querySelector('#purchase-order-overlay .c-details-mv').innerHTML = name;
   document.querySelector('#purchase-order-overlay .c-b-type').innerHTML = `(${body_type})`;
@@ -37,11 +52,6 @@ const openPurchaseModal = (params) => {
     e.preventDefault();
     let amount = document.querySelector('.purchase-order-form .price').value;
     amount = amount.replace(/\D/g, '');
-    if (amount === '') {
-      message.innerHTML = 'The price field cannot be empty!';
-      notificationModal.style.display = 'block';
-      return 0;
-    }
 
     const data = { car_id: id, amount };
     const options = {
@@ -76,7 +86,6 @@ const openFraudModal = (params) => {
   const {
     id, name, price, body_type,
   } = params;
-  const flagAdBtn = document.getElementById('flag-ad');
 
   document.querySelector('#fraudulent-flag-overlay .c-details-mv').innerHTML = name;
   document.querySelector('#fraudulent-flag-overlay .c-b-type').innerHTML = `(${body_type})`;
@@ -90,11 +99,6 @@ const openFraudModal = (params) => {
     e.preventDefault();
     const reason = document.querySelector('.flagging-form .reason').value;
     const description = document.querySelector('.flagging-form .description').value;
-    if (reason.length < 3 || description.length <= 1) {
-      message.innerHTML = 'Ensure you select a reason for your flag, and a description of the flag is given.';
-      notificationModal.style.display = 'block';
-      return 0;
-    }
 
     const data = { car_id: id, reason, description };
     const options = {
@@ -236,10 +240,23 @@ closeCarPreview.onclick = () => {
   toggleScroll();
 };
 
+priceField.addEventListener('keyup', () => {
+  const amount = document.querySelector('.purchase-order-form .price').value;
+  enablePriceSummitBtn(amount, placeOrderBtn);
+});
+reasonField.onchange = () => {
+  enableFlagBtn();
+};
+descField.onkeyup = () => {
+  enableFlagBtn();
+};
+
 // close purchase car form modal view
 closePurModal.onclick = (e) => {
   e.preventDefault();
   purchaseModal.style.display = 'none';
+  document.querySelector('.purchase-order-form .price').value = null;
+  placeOrderBtn.setAttribute('disabled', 'disabled');
   toggleScroll();
 };
 
@@ -249,6 +266,7 @@ closeFraudModal.onclick = (e) => {
   fraudModal.style.display = 'none';
   document.querySelector('.flagging-form .reason').value = null;
   document.querySelector('.flagging-form .description').value = null;
+  flagAdBtn.setAttribute('disabled', 'disabled');
   toggleScroll();
 };
 
