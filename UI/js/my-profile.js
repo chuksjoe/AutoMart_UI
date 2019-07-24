@@ -205,8 +205,12 @@ window.onload = () => {
   // fetch user's info from database
   const loader = document.querySelector('#loading');
   const userInfo = document.querySelector('.main-100');
+  const options = {
+    method: 'GET',
+    headers: { authorization: `Bearer ${token}` },
+  };
 
-  fetch(`${urlPrefix}/api/v1/user/${user_id}`)
+  fetch(`${urlPrefix}/api/v1/user/${user_id}`, options)
   .then(res => res.json())
   .then((response) => {
     const res = response;

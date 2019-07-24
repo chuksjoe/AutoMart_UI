@@ -7,6 +7,8 @@ const closeCarPreview = document.getElementById('close-car-preview');
 const closeNotifation = document.querySelector('.close-notification');
 const message = document.querySelector('#notification-overlay .message');
 const confMsg = document.querySelector('#confirmation-overlay .message');
+const updatePBtn = document.getElementById('update-price');
+const priceField = document.querySelector('.update-price-form .price');
 
 const user_id = sessionStorage.getItem('user_id');
 const is_loggedin = sessionStorage.getItem('is_loggedin');
@@ -63,7 +65,6 @@ const openUpdateModal = (params) => {
   const {
     id, name, price, body_type,
   } = params;
-  const updatePriceBtn = document.getElementById('update-price');
 
   document.querySelector('#update-price-overlay .c-details-mv').innerHTML = name;
   document.querySelector('#update-price-overlay .c-b-type').innerHTML = `(${body_type})`;
@@ -73,15 +74,10 @@ const openUpdateModal = (params) => {
   updatePriceModal.style.display = 'block';
   toggleScroll();
 
-  updatePriceBtn.onclick = (e) => {
+  updatePBtn.onclick = (e) => {
     e.preventDefault();
     let new_price = document.querySelector('.update-price-form .price').value;
     new_price = new_price.replace(/\D/g, '');
-    if (new_price === '') {
-      message.innerHTML = 'The price field cannot be empty!';
-      notificationModal.style.display = 'block';
-      return 0;
-    }
 
     const options = {
       method: 'PATCH',
@@ -176,10 +172,14 @@ const fetchCarAds = (url, msgIfEmpty) => {
         const markSoldBtn = document.createElement('button');
         const deleteAdBtn = document.createElement('button');
 
+        const flagBtn = document.createElement('label');
+        flagBtn.setAttribute('class', 'fas fa-flag');
+
         carCard.setAttribute('class', 'car-card flex-container');
         carImg.classList.add('car-image');
         carImg.innerHTML = `<img src="${image_url}" title="Preview AD">
             <label class="car-state-tag">${state}</label>`;
+        carImg.appendChild(flagBtn);
         carImg.onclick = () => {
           const btnGrpPrev = document.createElement('div');
           const markSoldBtnPrev = document.createElement('button');
@@ -279,6 +279,11 @@ window.onload = () => {
   fetchCarAds(`${urlPrefix}/api/v1/car?owner_id=${user_id}`, 'You have not posted any car sale AD.');
 };
 
+priceField.addEventListener('keyup', () => {
+  const price = document.querySelector('.update-price-form .price').value;
+  enablePriceSummitBtn(price, updatePBtn);
+});
+
 closeCarPreview.onclick = () => {
   carPreview.style.display = 'none';
   toggleScroll();
@@ -295,5 +300,6 @@ closeUpdateModal.onclick = (e) => {
   e.preventDefault();
   updatePriceModal.style.display = 'none';
   document.querySelector('.update-price-form .price').value = null;
+  updatePBtn.setAttribute('disabled', 'disabled');
   toggleScroll();
 };

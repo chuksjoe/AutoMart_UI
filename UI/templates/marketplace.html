@@ -76,10 +76,10 @@
 
 		<!-- Modal view to view a specific car -->
 		<div id="car-preview-overlay" class="overlay">
+			<div id="close-car-preview" class="fa fa-times close-btn"></div>
 			<div class="lg-m-v">
 				<h2 class="modal-header"></h2>
 				<p class="added-date"></p>
-				<div id="close-car-preview" class="fa fa-times close-btn"></div>
 				<div class="modal-body">
 					<div class="car-view-detail flex-container">
 						<!-- <div class="car-view-image">
@@ -125,8 +125,9 @@
 							<label for="">Offering Price(&#8358):</label><br>
 							<input type="text" class="price" data-type="number" min="1000" placeholder="Offering Price(&#8358):">
 						</div>
+						<p class="m-0 f-8">enter price above &#8358 999 to enable submit button.</p>
 						<div class="btn-group flex-container">
-							<button id="place-order" class="half-btn btn">Place Order</button>
+							<button id="place-order" class="half-btn btn" disabled>Place Order</button>
 							<button id="close-purchase-modal" class="half-btn btn">Cancel</button>
 						</div>
 					</form>
@@ -157,8 +158,9 @@
 							<label for="">Description:</label><br>
 							<textarea class="description" name="description" maxlength="200" placeholder="Description:"></textarea>
 						</div>
+						<p class="m-0 f-8">fill out form to enable submit button.</p>
 						<div class="btn-group flex-container">
-							<button id="flag-ad" class="half-btn btn">Flag/Report AD</button>
+							<button id="flag-ad" class="half-btn btn" disabled>Flag/Report AD</button>
 							<button id="close-fraud-modal" class="half-btn btn">Cancel</button>
 						</div>
 					</form>

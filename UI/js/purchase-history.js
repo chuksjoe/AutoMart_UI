@@ -1,4 +1,6 @@
 const updatePriceModal = document.getElementById('update-price-overlay');
+const updatePriceBtn = document.getElementById('update-price');
+const priceField = document.querySelector('.update-order-form .price');
 const closeUpdateModal = document.getElementById('close-update-modal');
 const notificationModal = document.getElementById('notification-overlay');
 const confirmationModal = document.getElementById('confirmation-overlay');
@@ -62,7 +64,6 @@ const openUpdateModal = (params) => {
 	const {
     id, car_name, car_price, car_body_type, amount,
   } = params;
-  const updatePriceBtn = document.getElementById('update-price');
   const orderInfo = document.querySelector('#update-price-overlay .order-info');
 
   orderInfo.innerHTML = `
@@ -113,6 +114,12 @@ const openUpdateModal = (params) => {
     return 0;
   };
 };
+
+/* ============ MAIN LOGICS ========================= */
+priceField.addEventListener('keyup', () => {
+  const price = document.querySelector('.update-order-form .price').value;
+  enablePriceSummitBtn(price, updatePriceBtn);
+});
 
 window.onload = () => {
 	// redirect to sign in page if the user is not logged in
@@ -206,6 +213,8 @@ window.onload = () => {
 closeUpdateModal.onclick = (e) => {
   e.preventDefault();
   updatePriceModal.style.display = 'none';
+  document.querySelector('.update-order-form .price').value = null;
+  updatePriceBtn.setAttribute('disabled', 'disabled');
   toggleScroll();
 };
 
